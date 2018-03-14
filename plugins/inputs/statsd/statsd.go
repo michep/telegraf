@@ -104,6 +104,8 @@ type Statsd struct {
 	// bucket -> influx templates
 	Templates []string
 
+	ReTemplates []string
+
 	// Protocol listeners
 	UDPlistener *net.UDPConn
 	TCPlistener *net.TCPListener
@@ -116,7 +118,7 @@ type Statsd struct {
 	TCPKeepAlive       bool               `toml:"tcp_keep_alive"`
 	TCPKeepAlivePeriod *internal.Duration `toml:"tcp_keep_alive_period"`
 
-	graphiteParser *graphite.GraphiteParser
+	graphiteParser *graphite.GraphiteReParser
 
 	acc telegraf.Accumulator
 
@@ -648,7 +650,7 @@ func (s *Statsd) parseName(bucket string) (string, string, map[string]string) {
 	var err error
 
 	if p == nil || s.graphiteParser.Separator != s.MetricSeparator {
-		p, err = graphite.NewGraphiteParser(s.MetricSeparator, s.Templates, nil)
+		p, err = graphite.NewGraphiteReParser(s.MetricSeparator, s.ReTemplates, nil)
 		s.graphiteParser = p
 	}
 
