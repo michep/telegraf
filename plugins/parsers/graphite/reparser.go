@@ -12,6 +12,10 @@ type GraphiteReParser struct {
 	templates   []*regexp.Regexp
 }
 
+const (
+	measurementGroupName = "measurement"
+)
+
 func NewGraphiteReParser(separator string, templates []string, defaultTags map[string]string) (*GraphiteReParser, error) {
 	var (
 		err error
@@ -69,13 +73,22 @@ func (p *GraphiteReParser) ApplyTemplate(line string) (string, map[string]string
 }
 
 func (p *GraphiteReParser) parseName(matches, subnames []string) (name string, dynamic map[string]string) {
+	var sep string
 	dynamic = make(map[string]string)
 	for idx, subname := range subnames {
 		if subname != "" {
-			if subname == "measurement" {
-				name = p.concat(name, matches[idx], p.Separator)
-			} else {
-				dynamic[subname] = p.concat(dynamic[subname], matches[idx], p.Separator)
+			sep = strings.TrimSuffix(subname, measurementGroupName)
+			switch {
+			case len(sep) == 0:
+				name = p.concat(name, matches[idx], p.Separator) // metric name, use configured separator
+			case sep == "_":
+				name = p.concat(name, matches[idx], "") // metric name, use no separator
+			case sep == "__":
+				name = p.concat(name, matches[idx], "_") // metric name, use underscore separator
+			case sep != subname:
+				name = p.concat(name, matches[idx], sep) // metric name, use specified separator
+			case sep == subname:
+				dynamic[subname] = p.concat(dynamic[subname], matches[idx], p.Separator) // tag name, use configured separator
 			}
 		}
 	}

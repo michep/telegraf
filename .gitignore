@@ -3,3 +3,5 @@ build
 /telegraf.gz
 *~
 *#
+/.idea
+/vendor
