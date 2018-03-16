@@ -1,17 +1,25 @@
 package graphite
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 var (
 	re_templates = []string{
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.[\\w]+?)|(?:[\\w]+?))\\.(?P<measurement>[\\w]+?Transmitter)-(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.[\\w]+?)|(?:[\\w]+?))\\.(?P<measurement>.+$)",
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?:[\\w]*?)(?P<measurement>Connector)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?:\\w*?)(?P<measurement>(?:SmsPostMessage|SmsGetMessage).+$)",
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?:[\\w]*?)(?P<measurement>Connector)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?P<measurement>.+$)",
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?P<measurement>[\\w]+?Transmitter)-(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?P<measurement>[\\w]+?Receiver)-(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?P<measurement>[\\w]+?Adapter)-(?P<type>[\\w]+?)\\.(?P<measurement>.+$)",
-		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>[\\w-]+?)\\.(?P<measurement>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<name>Connector)(?:\\d*?)(?P<_name>DatabaseAccessor)\\.(?:\\w*?)(?P<name>(?:SmsPostMessage|SmsGetMessage).+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<name>Connector)(?:\\d*?)(?P<_name>DatabaseAccessor)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>RcoiConnectorInMessageTransmitter)\\.(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Receiver)-(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?channelInMessageProcessMonitorAvgThroughputCounter)\\.(?P<subject>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?PercentileCounter)\\.(?P<percentile>\\w+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?)\\.(?:priority)\\.(?P<priority>\\w+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+$)",
 	}
 )
 
@@ -19,7 +27,7 @@ func BenchmarkParseReParser(b *testing.B) {
 	p, _ := NewGraphiteReParser(".", re_templates, nil)
 
 	for i := 0; i < b.N; i++ {
-		p.ApplyTemplate("MfmsMonitor.avirouter-base-avirouter0.zchl09.AdvisaOutMessageCache.advisaOutMessageCachedMap.size")
+		p.ApplyTemplate("MfmsMonitor.manager-base-sbmanager3.zsbmng03.UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.priority.6.size")
 	}
 }
 
@@ -86,12 +94,43 @@ func TestTemplateApplyReParser(t *testing.T) {
 			measurement: "MfmsMonitor.Gate.ComiConnectorOutMessageTransmitter.connectorOutMessageProcessMonitorAvgSpeedCounter",
 			tags:        map[string]string{"component": "connector-sb1-sb13", "zone": "zcnr02", "gatecomponent": "ermb0n0", "peer": "manager1n0"},
 		},
+		{
+			input:       "MfmsMonitor.receiver-base-receiver1.zchl04.RcoiConnectorInMessageTransmitter.binbank5.connectorInMessageProcessQueueProcessor.size",
+			measurement: "MfmsMonitor.RcoiConnectorInMessageTransmitter.connectorInMessageProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "receiver-base-receiver1", "zone": "zchl04", "peer": "binbank5"},
+		},
+		{
+			input:       "MfmsMonitor.connector-emp-mospark1.zcnr03.ComiConnectorOutMessageTransmitterManager.processedConnectorOutMessageMonitorPercentileCounter.90",
+			measurement: "MfmsMonitor.ComiConnectorOutMessageTransmitterManager.processedConnectorOutMessageMonitorPercentileCounter",
+			tags:        map[string]string{"component": "connector-emp-mospark1", "zone": "zcnr03", "percentile": "90"},
+		},
+		{
+			input:       "MfmsMonitor.manager-base-sbmanager3.zsbmng03.UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.priority.6.size",
+			measurement: "MfmsMonitor.UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "manager-base-sbmanager3", "zone": "zsbmng03", "priority": "6"},
+		},
+		{
+			input:       "MfmsMonitor.channel-smpp-alfacapmts0.zchl10.ResendProcessor.commandStatusMonitorAvgThroughputCounter.error",
+			measurement: "MfmsMonitor.ResendProcessor.commandStatusMonitorAvgThroughputCounter",
+			tags:        map[string]string{"component": "channel-smpp-alfacapmts0", "zone": "zchl10", "status": "error"},
+		},
+		{
+			input:       "MfmsMonitor.channel-smpp-beeline1.zchl06.DeliverSmsProcessor.channelInMessageProcessMonitorAvgThroughputCounter.79037676761",
+			measurement: "MfmsMonitor.DeliverSmsProcessor.channelInMessageProcessMonitorAvgThroughputCounter",
+			tags:        map[string]string{"component": "channel-smpp-beeline1", "zone": "zchl06", "subject": "79037676761"},
+		},
+		{
+			input:       "MfmsMonitor.receiver-base-receiver0.zchl06.RcoiConnectorInMessageTransmitter.connectorInMessageProcessQueueProcessor.size",
+			measurement: "MfmsMonitor.RcoiConnectorInMessageTransmitter.connectorInMessageProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "receiver-base-receiver0", "zone": "zchl06"},
+		},
 	}
 
 	p, _ := NewGraphiteReParser(".", re_templates, nil)
 
 	for _, test := range tests {
 		measurement, tags, _, _ := p.ApplyTemplate(test.input)
+		fmt.Println(measurement, tags)
 		if measurement != test.measurement {
 			t.Fatalf("name parse failer.  expected %v, got %v", test.measurement, measurement)
 		}
