@@ -90,7 +90,7 @@
 - [#3801](https://github.com/influxdata/telegraf/issues/3801): Fix panic in http_response on invalid regex.
 - [#3973](https://github.com/influxdata/telegraf/issues/3873): Fix socket_listener setting ReadBufferSize on tcp sockets.
 
-## v1.5.3 [unreleased]
+## v1.5.3 [2018-03-14]
 
 ### Bugfixes
 
@@ -100,6 +100,7 @@
 - [#3697](https://github.com/influxdata/telegraf/issues/3697): Disable keepalive in mqtt output to prevent deadlock.
 - [#3786](https://github.com/influxdata/telegraf/pull/3786): Fix collation difference in sqlserver input.
 - [#3871](https://github.com/influxdata/telegraf/pull/3871): Fix uptime metric in passenger input plugin.
+- [#3851](https://github.com/influxdata/telegraf/issues/3851): Add output of stderr in case of error to exec log message.
 
 ## v1.5.2 [2018-01-30]
 
