@@ -7,6 +7,7 @@ import (
 
 var (
 	re_templates = []string{
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate\\.route)\\.(?P<route>[\\w-]+?)\\.(?P<type>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>.+?TimeCounter)\\.(?P<time>\\w+?$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
@@ -16,9 +17,11 @@ var (
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>RcoiConnectorInMessageTransmitter)\\.(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>telegramBot)-(?P<bot>[\\w-]+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>ClientProcessor)\\.(?P<peer>[\\w]+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Transmitter)(?:-|\\.)(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Receiver)-(?P<peer>[\\w-]+?\\d+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<name>.+$)",
+		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?deliveryMonitorDurationCounter)\\.(?P<type>\\w+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?payloadOutPacketQueue)\\.(?P<peer>[\\w]+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?channelInMessageProcessMonitorAvgThroughputCounter)\\.(?P<subject>.+$)",
@@ -193,6 +196,30 @@ func TestTemplateApplyReParser(t *testing.T) {
 			measurement: "MfmsMonitor.telegramBot.telegramInMessageDataProcessQueueProcessor.size",
 			tags:        map[string]string{"component": "imchannel-telegram-telegram0", "zone": "imsrv02", "bot": "RolfService24_7_bot"},
 		},
+		{
+			input:       "MfmsMonitor.smppproxy-base-mtsito0.zchl06.ClientProcessor.mtsito3.submitSmSequenceNumberMap.size",
+			measurement: "MfmsMonitor.ClientProcessor.submitSmSequenceNumberMap.size",
+			tags:        map[string]string{"component": "smppproxy-base-mtsito0", "zone": "zchl06", "peer": "mtsito3"},
+		},
+		{
+			input:       "MfmsMonitor.channel-smpp-sbmts8.zchl07.ChannelMonitorAccessor.deliveryMonitorDurationCounter.40000",
+			measurement: "MfmsMonitor.ChannelMonitorAccessor.deliveryMonitorDurationCounter",
+			tags:        map[string]string{"component": "channel-smpp-sbmts8", "zone": "zchl07", "type": "40000"},
+		},
+		{
+			input:       "MfmsMonitor.connector-sb1-sb4.zcnr02.Gate.route.AdminMBK_default.megafon0",
+			measurement: "MfmsMonitor.Gate.route",
+			tags:        map[string]string{"component": "connector-sb1-sb4", "zone": "zcnr02", "route": "AdminMBK_default", "type": "megafon0"},
+		},
+		{
+			input:       "MfmsMonitor.manager-base-manager0.zmng00.ComiConnectorOutMessageReceiver-bistrodengi-web6.receivedConnectorOutMessageMonitorAvgThroughputCounter",
+			measurement: "MfmsMonitor.ComiConnectorOutMessageReceiver.receivedConnectorOutMessageMonitorAvgThroughputCounter",
+			tags:        map[string]string{"component": "manager-base-manager0", "zone": "zmng00", "peer": "bistrodengi-web6"},
+		},
+		// =====================================================================================================================
+		// =====================================================================================================================
+		// =====================================================================================================================
+
 		{
 			input:       "pushdemo00.server-web_push-demo_00.non-heap.committed",
 			measurement: "push.non-heap.committed",
