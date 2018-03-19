@@ -104,7 +104,8 @@ type Statsd struct {
 	// bucket -> influx templates
 	Templates []string
 
-	ReTemplates []string
+	ReTemplates          []string
+	MeasurementGroupName string
 
 	// Protocol listeners
 	UDPlistener *net.UDPConn
@@ -650,7 +651,7 @@ func (s *Statsd) parseName(bucket string) (string, string, map[string]string) {
 	var err error
 
 	if p == nil || s.graphiteParser.Separator != s.MetricSeparator {
-		p, err = graphite.NewGraphiteReParser(s.MetricSeparator, s.ReTemplates, nil)
+		p, err = graphite.NewGraphiteReParser(s.MetricSeparator, s.MeasurementGroupName, s.ReTemplates, nil)
 		s.graphiteParser = p
 	}
 

@@ -7,16 +7,13 @@ import (
 )
 
 type GraphiteReParser struct {
-	Separator   string
-	DefaultTags map[string]string
-	templates   []*regexp.Regexp
+	Separator            string
+	DefaultTags          map[string]string
+	MeasurementGroupName string
+	templates            []*regexp.Regexp
 }
 
-const (
-	measurementGroupName = "name"
-)
-
-func NewGraphiteReParser(separator string, templates []string, defaultTags map[string]string) (*GraphiteReParser, error) {
+func NewGraphiteReParser(separator, measurementgroupname string, templates []string, defaultTags map[string]string) (*GraphiteReParser, error) {
 	var (
 		err error
 		re  *regexp.Regexp
@@ -28,6 +25,11 @@ func NewGraphiteReParser(separator string, templates []string, defaultTags map[s
 	p := &GraphiteReParser{
 		Separator: separator,
 	}
+
+	if measurementgroupname == "" {
+		measurementgroupname = "measurement"
+	}
+	p.MeasurementGroupName = measurementgroupname
 
 	if defaultTags != nil {
 		p.DefaultTags = defaultTags
@@ -77,7 +79,7 @@ func (p *GraphiteReParser) parseName(matches, subnames []string) (name string, d
 	dynamic = make(map[string]string)
 	for idx, subname := range subnames {
 		if subname != "" {
-			sep = strings.TrimSuffix(subname, measurementGroupName)
+			sep = strings.TrimSuffix(subname, p.MeasurementGroupName)
 			switch {
 			case len(sep) == 0:
 				name = p.concat(name, matches[idx], p.Separator) // no prefix, use configured separator for metric name

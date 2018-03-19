@@ -7,41 +7,41 @@ import (
 
 var (
 	re_templates = []string{
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate\\.route)\\.(?P<route>[\\w-]+?)\\.(?P<type>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>.+?TimeCounter)\\.(?P<time>\\w+?$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<name>Connector)(?:\\d*?)(?P<_name>DatabaseAccessor)\\.(?:\\w*?)(?P<name>(?:SmsPost|SmsGet).+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<name>Connector)(?:\\d*?)(?P<_name>DatabaseAccessor)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>RcoiConnectorInMessageTransmitter)\\.(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>telegramBot)-(?P<bot>[\\w-]+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>ClientProcessor)\\.(?P<peer>[\\w]+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Transmitter)(?:-|\\.)(?P<peer>\\w+?\\d+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Receiver)-(?P<peer>[\\w-]+?\\d+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?deliveryMonitorDurationCounter)\\.(?P<type>\\w+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?payloadOutPacketQueue)\\.(?P<peer>[\\w]+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?channelInMessageProcessMonitorAvgThroughputCounter)\\.(?P<subject>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?PercentileCounter)\\.(?P<percentile>\\w+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?lastRequestDate)\\.(?P<peer>\\w+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?)\\.(?:priority)\\.(?P<priority>\\w+?)\\.(?P<name>.+$)",
-		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate\\.route)\\.(?P<route>[\\w-]+?)\\.(?P<type>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>.+?TimeCounter)\\.(?P<time>\\w+?$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>Connector)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?:\\w*?)(?P<measurement>(?:SmsPost|SmsGet).+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>Connector)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>RcoiConnectorInMessageTransmitter)\\.(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>telegramBot)-(?P<bot>[\\w-]+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>ClientProcessor)\\.(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Transmitter)(?:-|\\.)(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Receiver)-(?P<peer>[\\w-]+?\\d+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?deliveryMonitorDurationCounter)\\.(?P<type>\\w+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?payloadOutPacketQueue)\\.(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?channelInMessageProcessMonitorAvgThroughputCounter)\\.(?P<subject>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?PercentileCounter)\\.(?P<percentile>\\w+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?lastRequestDate)\\.(?P<peer>\\w+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?)\\.(?:priority)\\.(?P<priority>\\w+?)\\.(?P<measurement>.+$)",
+		"(?P<measurement>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+$)",
 
-		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>ApnsHttpChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<name>.+?(?:Count|Timer))\\.(?P<type>\\w+$)",
-		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>ApnsHttpChannelSender)\\.(?P<appid>[\\w.]+?)\\.(?P<name>(?:http|send|success)[\\w]+?)\\.(?P<type>\\w+$)",
-		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>.+?(Delivered|Sent|Failed|Count|Timer|Meter))\\.(?P<type>\\w+$)",
-		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>pools)\\.(?P<name>[\\w-]+?)\\.(?P<type>\\w+$)",
-		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>requests)\\.(?P<type>\\w+$)",
-		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>StoredQueue)\\.(?P<queue>[\\w]+?)\\.(?P<name>\\w+$)",
-		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>.+$)",
+		"(?P<pushhost>^\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>ApnsHttpChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<measurement>.+?(?:Count|Timer))\\.(?P<type>\\w+$)",
+		"(?P<pushhost>^\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>ApnsHttpChannelSender)\\.(?P<appid>[\\w.]+?)\\.(?P<measurement>(?:http|send|success)[\\w]+?)\\.(?P<type>\\w+$)",
+		"(?P<pushhost>^\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>.+?(Delivered|Sent|Failed|Count|Timer|Meter))\\.(?P<type>\\w+$)",
+		"(?P<pushhost>^\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>pools)\\.(?P<measurement>[\\w-]+?)\\.(?P<type>\\w+$)",
+		"(?P<pushhost>^\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>requests)\\.(?P<type>\\w+$)",
+		"(?P<pushhost>^\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>StoredQueue)\\.(?P<queue>[\\w]+?)\\.(?P<measurement>\\w+$)",
+		"(?P<pushhost>^\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>.+$)",
 	}
 )
 
 func BenchmarkParseReParser(b *testing.B) {
-	p, _ := NewGraphiteReParser(".", re_templates, nil)
+	p, _ := NewGraphiteReParser(".", "measurement", re_templates, nil)
 
 	for i := 0; i < b.N; i++ {
 		p.ApplyTemplate("MfmsMonitor.manager-base-sbmanager3.zsbmng03.UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.priority.6.size")
@@ -222,77 +222,77 @@ func TestTemplateApplyReParser(t *testing.T) {
 
 		{
 			input:       "pushdemo00.server-web_push-demo_00.non-heap.committed",
-			measurement: "push.non-heap.committed",
-			tags:        map[string]string{"instance": "demo00", "component": "server-web_push-demo_00"},
+			measurement: "non-heap.committed",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "server-web_push-demo_00"},
 		},
 		{
 			input:       "pushdemo00.channel-push_gcm-demo_00.CassandraSecurityTokenDataAccessor.errorCount.m15_rate",
-			measurement: "push.CassandraSecurityTokenDataAccessor.errorCount",
-			tags:        map[string]string{"instance": "demo00", "component": "channel-push_gcm-demo_00", "type": "m15_rate"},
+			measurement: "CassandraSecurityTokenDataAccessor.errorCount",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "channel-push_gcm-demo_00", "type": "m15_rate"},
 		},
 		{
 			input:       "pushdemo00.channel-push_apnshttp-demo_00.ApnsHttpChannelSender-appId-1003.dequeueTimer.max",
-			measurement: "push.ApnsHttpChannelSender.dequeueTimer",
-			tags:        map[string]string{"instance": "demo00", "component": "channel-push_apnshttp-demo_00", "type": "max", "appid": "1003"},
+			measurement: "ApnsHttpChannelSender.dequeueTimer",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "type": "max", "appid": "1003"},
 		},
 		{
 			input:       "pushdemo00.connector-gate-openbank_demo_01.ClientOutMessageDlvTimeCounter.enqueudToDelivered.p50",
-			measurement: "push.ClientOutMessageDlvTimeCounter.enqueudToDelivered",
-			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-openbank_demo_01", "type": "p50"},
+			measurement: "ClientOutMessageDlvTimeCounter.enqueudToDelivered",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "connector-gate-openbank_demo_01", "type": "p50"},
 		},
 		{
 			input:       "pushdemo00.connector-gate-openbank_demo_00.ClientOutMessageDlvTimeCounter.enqueudToSent.m5_rate",
-			measurement: "push.ClientOutMessageDlvTimeCounter.enqueudToSent",
-			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-openbank_demo_00", "type": "m5_rate"},
+			measurement: "ClientOutMessageDlvTimeCounter.enqueudToSent",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "connector-gate-openbank_demo_00", "type": "m5_rate"},
 		},
 		{
 			input:       "pushdemo00.channel-push_apnshttp-demo_00.ApnsHttpChannelSender.com.advisa.advisaenterprise.vtb.201.successReverseGateMeter.m1_rate",
-			measurement: "push.ApnsHttpChannelSender.successReverseGateMeter",
-			tags:        map[string]string{"instance": "demo00", "component": "channel-push_apnshttp-demo_00", "type": "m1_rate", "appid": "com.advisa.advisaenterprise.vtb.201"},
+			measurement: "ApnsHttpChannelSender.successReverseGateMeter",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "type": "m1_rate", "appid": "com.advisa.advisaenterprise.vtb.201"},
 		},
 		{
 			input:       "pushdemo00.server-web_push-demo_00.pools.Compressed-Class-Space.committed",
-			measurement: "push.pools.Compressed-Class-Space",
-			tags:        map[string]string{"instance": "demo00", "component": "server-web_push-demo_00", "type": "committed"},
+			measurement: "pools.Compressed-Class-Space",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "server-web_push-demo_00", "type": "committed"},
 		},
 		{
 			input:       "pushdemo00.connector-httpxml_securitytoken-test_demo_00.ClientOutMessageSendService.commonSpeedMeter.mean_rate",
-			measurement: "push.ClientOutMessageSendService.commonSpeedMeter",
-			tags:        map[string]string{"instance": "demo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "mean_rate"},
+			measurement: "ClientOutMessageSendService.commonSpeedMeter",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "mean_rate"},
 		},
 		{
 			input:       "pushdemo00.connector-httpxml_securitytoken-test_demo_00.ClientOutMessageDlvStatusCounter.anyDelivered.m15_rate",
-			measurement: "push.ClientOutMessageDlvStatusCounter.anyDelivered",
-			tags:        map[string]string{"instance": "demo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "m15_rate"},
+			measurement: "ClientOutMessageDlvStatusCounter.anyDelivered",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "m15_rate"},
 		},
 		{
 			input:       "pushdemo00.channel-sms_hpx-demo_00.pools.Metaspace.max",
-			measurement: "push.pools.Metaspace",
-			tags:        map[string]string{"instance": "demo00", "component": "channel-sms_hpx-demo_00", "type": "max"},
+			measurement: "pools.Metaspace",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "channel-sms_hpx-demo_00", "type": "max"},
 		},
 		{
 			input:       "pushdemo00.channel-push_apnshttp-demo_00.CassandraDlvStatusInfoDataAccessor.getOutMessageDlvStatusByConnectorOutMessageIdAndAccountIdTimer.m15_rate",
-			measurement: "push.CassandraDlvStatusInfoDataAccessor.getOutMessageDlvStatusByConnectorOutMessageIdAndAccountIdTimer",
-			tags:        map[string]string{"instance": "demo00", "component": "channel-push_apnshttp-demo_00", "type": "m15_rate"},
+			measurement: "CassandraDlvStatusInfoDataAccessor.getOutMessageDlvStatusByConnectorOutMessageIdAndAccountIdTimer",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "type": "m15_rate"},
 		},
 		{
 			input:       "pushdemo00.channel-push_gcm-demo_00.StoredQueue.1035.size",
-			measurement: "push.StoredQueue.size",
-			tags:        map[string]string{"instance": "demo00", "component": "channel-push_gcm-demo_00", "queue": "1035"},
+			measurement: "StoredQueue.size",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "channel-push_gcm-demo_00", "queue": "1035"},
 		},
 		{
 			input:       "pushdemo00.connector-gate-sb_demo_01.requests.p99",
-			measurement: "push.requests",
-			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-sb_demo_01", "type": "p99"},
+			measurement: "requests",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "connector-gate-sb_demo_01", "type": "p99"},
 		},
 		{
 			input:       "pushdemo00.connector-gate-sb_demo_01.retries-on-connection-error",
-			measurement: "push.retries-on-connection-error",
-			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-sb_demo_01"},
+			measurement: "retries-on-connection-error",
+			tags:        map[string]string{"pushhost": "pushdemo00", "component": "connector-gate-sb_demo_01"},
 		},
 	}
 
-	p, err := NewGraphiteReParser(".", re_templates, nil)
+	p, err := NewGraphiteReParser(".", "measurement", re_templates, nil)
 	if err != nil {
 		t.Fatal("error parsin regexp: ", err)
 	}
