@@ -26,6 +26,14 @@ var (
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?lastRequestDate)\\.(?P<peer>\\w+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+?)\\.(?:priority)\\.(?P<priority>\\w+?)\\.(?P<name>.+$)",
 		"(?P<name>^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<name>.+$)",
+
+		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>ApnsHttpChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<name>.+?(?:Count|Timer))\\.(?P<type>\\w+$)",
+		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>ApnsHttpChannelSender)\\.(?P<appid>[\\w.]+?)\\.(?P<name>(?:http|send|success)[\\w]+?)\\.(?P<type>\\w+$)",
+		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>.+?(Delivered|Sent|Failed|Count|Timer|Meter))\\.(?P<type>\\w+$)",
+		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>pools)\\.(?P<name>[\\w-]+?)\\.(?P<type>\\w+$)",
+		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>requests)\\.(?P<type>\\w+$)",
+		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>StoredQueue)\\.(?P<queue>[\\w]+?)\\.(?P<name>\\w+$)",
+		"(?P<name>^push)(?P<instance>[\\w]+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<name>.+$)",
 	}
 )
 
@@ -185,9 +193,82 @@ func TestTemplateApplyReParser(t *testing.T) {
 			measurement: "MfmsMonitor.telegramBot.telegramInMessageDataProcessQueueProcessor.size",
 			tags:        map[string]string{"component": "imchannel-telegram-telegram0", "zone": "imsrv02", "bot": "RolfService24_7_bot"},
 		},
+		{
+			input:       "pushdemo00.server-web_push-demo_00.non-heap.committed",
+			measurement: "push.non-heap.committed",
+			tags:        map[string]string{"instance": "demo00", "component": "server-web_push-demo_00"},
+		},
+		{
+			input:       "pushdemo00.channel-push_gcm-demo_00.CassandraSecurityTokenDataAccessor.errorCount.m15_rate",
+			measurement: "push.CassandraSecurityTokenDataAccessor.errorCount",
+			tags:        map[string]string{"instance": "demo00", "component": "channel-push_gcm-demo_00", "type": "m15_rate"},
+		},
+		{
+			input:       "pushdemo00.channel-push_apnshttp-demo_00.ApnsHttpChannelSender-appId-1003.dequeueTimer.max",
+			measurement: "push.ApnsHttpChannelSender.dequeueTimer",
+			tags:        map[string]string{"instance": "demo00", "component": "channel-push_apnshttp-demo_00", "type": "max", "appid": "1003"},
+		},
+		{
+			input:       "pushdemo00.connector-gate-openbank_demo_01.ClientOutMessageDlvTimeCounter.enqueudToDelivered.p50",
+			measurement: "push.ClientOutMessageDlvTimeCounter.enqueudToDelivered",
+			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-openbank_demo_01", "type": "p50"},
+		},
+		{
+			input:       "pushdemo00.connector-gate-openbank_demo_00.ClientOutMessageDlvTimeCounter.enqueudToSent.m5_rate",
+			measurement: "push.ClientOutMessageDlvTimeCounter.enqueudToSent",
+			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-openbank_demo_00", "type": "m5_rate"},
+		},
+		{
+			input:       "pushdemo00.channel-push_apnshttp-demo_00.ApnsHttpChannelSender.com.advisa.advisaenterprise.vtb.201.successReverseGateMeter.m1_rate",
+			measurement: "push.ApnsHttpChannelSender.successReverseGateMeter",
+			tags:        map[string]string{"instance": "demo00", "component": "channel-push_apnshttp-demo_00", "type": "m1_rate", "appid": "com.advisa.advisaenterprise.vtb.201"},
+		},
+		{
+			input:       "pushdemo00.server-web_push-demo_00.pools.Compressed-Class-Space.committed",
+			measurement: "push.pools.Compressed-Class-Space",
+			tags:        map[string]string{"instance": "demo00", "component": "server-web_push-demo_00", "type": "committed"},
+		},
+		{
+			input:       "pushdemo00.connector-httpxml_securitytoken-test_demo_00.ClientOutMessageSendService.commonSpeedMeter.mean_rate",
+			measurement: "push.ClientOutMessageSendService.commonSpeedMeter",
+			tags:        map[string]string{"instance": "demo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "mean_rate"},
+		},
+		{
+			input:       "pushdemo00.connector-httpxml_securitytoken-test_demo_00.ClientOutMessageDlvStatusCounter.anyDelivered.m15_rate",
+			measurement: "push.ClientOutMessageDlvStatusCounter.anyDelivered",
+			tags:        map[string]string{"instance": "demo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "m15_rate"},
+		},
+		{
+			input:       "pushdemo00.channel-sms_hpx-demo_00.pools.Metaspace.max",
+			measurement: "push.pools.Metaspace",
+			tags:        map[string]string{"instance": "demo00", "component": "channel-sms_hpx-demo_00", "type": "max"},
+		},
+		{
+			input:       "pushdemo00.channel-push_apnshttp-demo_00.CassandraDlvStatusInfoDataAccessor.getOutMessageDlvStatusByConnectorOutMessageIdAndAccountIdTimer.m15_rate",
+			measurement: "push.CassandraDlvStatusInfoDataAccessor.getOutMessageDlvStatusByConnectorOutMessageIdAndAccountIdTimer",
+			tags:        map[string]string{"instance": "demo00", "component": "channel-push_apnshttp-demo_00", "type": "m15_rate"},
+		},
+		{
+			input:       "pushdemo00.channel-push_gcm-demo_00.StoredQueue.1035.size",
+			measurement: "push.StoredQueue.size",
+			tags:        map[string]string{"instance": "demo00", "component": "channel-push_gcm-demo_00", "queue": "1035"},
+		},
+		{
+			input:       "pushdemo00.connector-gate-sb_demo_01.requests.p99",
+			measurement: "push.requests",
+			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-sb_demo_01", "type": "p99"},
+		},
+		{
+			input:       "pushdemo00.connector-gate-sb_demo_01.retries-on-connection-error",
+			measurement: "push.retries-on-connection-error",
+			tags:        map[string]string{"instance": "demo00", "component": "connector-gate-sb_demo_01"},
+		},
 	}
 
-	p, _ := NewGraphiteReParser(".", re_templates, nil)
+	p, err := NewGraphiteReParser(".", re_templates, nil)
+	if err != nil {
+		t.Fatal("error parsin regexp: ", err)
+	}
 
 	for _, test := range tests {
 		measurement, tags, _, _ := p.ApplyTemplate(test.input)
