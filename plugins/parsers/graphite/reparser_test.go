@@ -8,18 +8,19 @@ import (
 var (
 	re_templates []string = []string{
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate\\.route)\\.(?P<route>[\\w-]+?)\\.(?P<type>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>.+?TimeCounter)\\.(?P<time>\\w+?$)",
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(?:ifm\\.\\w+?)|(?:\\w+?))\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>Connector)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?:\\w*?)(?P<measurement>(?:SmsPost|SmsGet).+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+?TimeCounter)\\.(?P<time>\\w+?$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>Connector(Batch)?)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?:\\w*?)(?P<measurement>(SmsPost|SmsGet).+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>Connector)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?P<measurement>.+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>(SmsPost|SmsGet)\\w+)\\.(?:\\w*?)(?P<measurement>(SmsPost|SmsGet).+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>RcoiConnectorInMessageTransmitter)\\.(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>telegramBot)-(?P<bot>[\\w-]+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>ClientProcessor)\\.(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Transmitter)(?:-|\\.)(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Receiver)-(?P<peer>[\\w-]+?\\d+?)\\.(?P<measurement>.+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Receiver)-(?P<peer>[\\w-]+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?deliveryMonitorDurationCounter)\\.(?P<type>\\w+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$)",
@@ -29,7 +30,7 @@ var (
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?(lastRequestDate|lastMessageTime|messagesPerMinute))\\.(?P<peer>\\w+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?(operator|source))\\.(?P<peer>[\\w-]+)\\.(?P<measurement>period)\\.(?P<period>\\w+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?(operator|source))\\.(?P<peer>[\\w-]+)\\.(?P<measurement>status)\\.(?P<status>\\w+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?)\\.(?:priority)\\.(?P<priority>\\w+?)\\.(?P<measurement>.+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?\\.priority)\\.(?P<priority>\\w+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?)\\.(?:\\.+)(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+$)",
 
@@ -100,6 +101,11 @@ func TestTemplateApplyReParser(t *testing.T) {
 			tags:        map[string]string{"component": "connector-hpx-autoins1", "zone": "zcnr08"},
 		},
 		{
+			input:       "MfmsMonitor.connectorbatch-smppimsi-bankofkazan0.zcnr03.SmppimsiConnectorBatchDatabaseAccessor.smppimsiSmsPostMessageAddMonitorAvgSpeedCounter",
+			measurement: "ConnectorBatchDatabaseAccessor.SmsPostMessageAddMonitorAvgSpeedCounter",
+			tags:        map[string]string{"component": "connectorbatch-smppimsi-bankofkazan0", "zone": "zcnr03"},
+		},
+		{
 			input:       "MfmsMonitor.connector-sb1-sb13.zcnr02.Gate.infobip0n1.CmiChannelInMessageTransmitterManager.channelInMessageProcessMonitorAvgSpeedCounter",
 			measurement: "Gate.CmiChannelInMessageTransmitterManager.channelInMessageProcessMonitorAvgSpeedCounter",
 			tags:        map[string]string{"component": "connector-sb1-sb13", "zone": "zcnr02", "gatecomponent": "infobip0n1"},
@@ -126,8 +132,18 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "MfmsMonitor.manager-base-sbmanager3.zsbmng03.UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.priority.6.size",
-			measurement: "UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.size",
+			measurement: "UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.priority.size",
 			tags:        map[string]string{"component": "manager-base-sbmanager3", "zone": "zsbmng03", "priority": "6"},
+		},
+		{
+			input:       "MfmsMonitor.manager-base-sbmanager3.zsbmng03.UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.size",
+			measurement: "UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "manager-base-sbmanager3", "zone": "zsbmng03"},
+		},
+		{
+			input:       "MfmsMonitor.connector-chelin0-chelin0.zcnr04.Chelin0SmsPostMessageDlvStatusCache.chelin0SmsPostMessageDlvStatusBatchMap.size",
+			measurement: "SmsPostMessageDlvStatusCache.SmsPostMessageDlvStatusBatchMap.size",
+			tags:        map[string]string{"component": "connector-chelin0-chelin0", "zone": "zcnr04"},
 		},
 		{
 			input:       "MfmsMonitor.channel-smpp-alfacapmts0.zchl10.ResendProcessor.commandStatusMonitorAvgThroughputCounter.error",
