@@ -7,7 +7,7 @@ import (
 
 var (
 	re_templates []string = []string{
-		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate\\.route)\\.(?P<route>[\\w-]+?)\\.(?P<type>.+$)",
+		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate\\.route)\\.(?P<system>[\\w-]+?)\\.(?P<chl_group>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+?TimeCounter)\\.(?P<time>\\w+?$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
@@ -34,9 +34,11 @@ var (
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?)\\.(?:\\.+)(?P<measurement>.+$)",
 		"(?:^MfmsMonitor)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<zone>\\w+?)\\.(?P<measurement>.+$)",
 
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>ApnsHttpChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<measurement>.+?(?:Count|Timer))\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>ApnsHttpChannelSender)\\.(?P<appid>[\\w.]+?)\\.(?P<measurement>(?:http|send|success)[\\w]+?)\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>.+?(Delivered|Sent|Failed|Count|Timer|Meter))\\.(?P<type>\\w+$)",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?ChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<measurement>.+?(?:Count|Timer))\\.(?P<type>\\w+$)",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?ChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<measurement>.+$)",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?ChannelSender)\\.(?P<appid>[\\w.-]+?)\\.(?P<measurement>(?:http|send|success)[\\w]+?)\\.(?P<type>\\w+$)",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?OutMessageDlvStatusCounter)\\.(?P<status>\\w+?)\\.(?P<type>\\w+$)",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>.+?(Delivered|Sent|Failed|Count|Timer|Meter|\\.meter))\\.(?P<type>\\w+$)",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>pools)\\.(?P<measurement>[\\w-]+?)\\.(?P<type>\\w+$)",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>StoredQueue)\\.(?P<queue>[\\w]+?)\\.(?P<measurement>\\w+$)",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>requests)\\.(?P<type>\\w+$)",
@@ -228,7 +230,7 @@ func TestTemplateApplyReParser(t *testing.T) {
 		{
 			input:       "MfmsMonitor.connector-sb1-sb4.zcnr02.Gate.route.AdminMBK_default.megafon0",
 			measurement: "Gate.route",
-			tags:        map[string]string{"component": "connector-sb1-sb4", "zone": "zcnr02", "route": "AdminMBK_default", "type": "megafon0"},
+			tags:        map[string]string{"component": "connector-sb1-sb4", "zone": "zcnr02", "system": "AdminMBK_default", "chl_group": "megafon0"},
 		},
 		{
 			input:       "MfmsMonitor.manager-base-manager0.zmng00.ComiConnectorOutMessageReceiver-bistrodengi-web6.receivedConnectorOutMessageMonitorAvgThroughputCounter",
@@ -290,6 +292,11 @@ func TestTemplateApplyReParser(t *testing.T) {
 			tags:        map[string]string{"hostname": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "type": "max", "appid": "1003"},
 		},
 		{
+			input:       "pushdemo00.channel-push_apnshttp-demo_00.ApnsHttpChannelSender-appId-1003.queueSize",
+			measurement: "ApnsHttpChannelSender.queueSize",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "appid": "1003"},
+		},
+		{
 			input:       "pushdemo00.connector-gate-openbank_demo_01.ClientOutMessageDlvTimeCounter.enqueudToDelivered.p50",
 			measurement: "ClientOutMessageDlvTimeCounter.enqueudToDelivered",
 			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-gate-openbank_demo_01", "type": "p50"},
@@ -305,6 +312,11 @@ func TestTemplateApplyReParser(t *testing.T) {
 			tags:        map[string]string{"hostname": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "type": "m1_rate", "appid": "com.advisa.advisaenterprise.vtb.201"},
 		},
 		{
+			input:       "pushdemo00.channel-push_apnshttp-demo_00.ApnsHttpChannelSender.ru.mfms.push-test.voip.310.successReverseGateMeter.mean_rate",
+			measurement: "ApnsHttpChannelSender.successReverseGateMeter",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "type": "mean_rate", "appid": "ru.mfms.push-test.voip.310"},
+		},
+		{
 			input:       "pushdemo00.server-web_push-demo_00.pools.Compressed-Class-Space.committed",
 			measurement: "pools.Compressed-Class-Space",
 			tags:        map[string]string{"hostname": "pushdemo00", "component": "server-web_push-demo_00", "type": "committed"},
@@ -316,8 +328,8 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "pushdemo00.connector-httpxml_securitytoken-test_demo_00.ClientOutMessageDlvStatusCounter.anyDelivered.m15_rate",
-			measurement: "ClientOutMessageDlvStatusCounter.anyDelivered",
-			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "m15_rate"},
+			measurement: "ClientOutMessageDlvStatusCounter",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-httpxml_securitytoken-test_demo_00", "type": "m15_rate", "status": "anyDelivered"},
 		},
 		{
 			input:       "pushdemo00.channel-sms_hpx-demo_00.pools.Metaspace.max",
@@ -343,6 +355,21 @@ func TestTemplateApplyReParser(t *testing.T) {
 			input:       "pushdemo00.connector-gate-sb_demo_01.retries-on-connection-error",
 			measurement: "retries-on-connection-error",
 			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-gate-sb_demo_01"},
+		},
+		{
+			input:       "pushdemo00.channel-push_gcm-demo_00.GcmChannelSender-appId-1014.processTimer.p95",
+			measurement: "GcmChannelSender.processTimer",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "channel-push_gcm-demo_00", "type": "p95", "appid": "1014"},
+		},
+		{
+			input:       "pushdemo00.connector-gate-sb_demo_04.deviceStatusOutPacketFailSafeTransmitter.meter.samples",
+			measurement: "deviceStatusOutPacketFailSafeTransmitter.meter",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-gate-sb_demo_04", "type": "samples"},
+		},
+		{
+			input:       "pushdemo00.connector-http-brooma_demo_06.ConnectorOutMessageDlvStatusCounter.rejected.m1_rate",
+			measurement: "ConnectorOutMessageDlvStatusCounter",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-http-brooma_demo_06", "type": "m1_rate", "status": "rejected"},
 		},
 	}
 
