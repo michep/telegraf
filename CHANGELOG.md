@@ -1,16 +1,28 @@
+## v1.7 [unreleased]
+
+### New Inputs
+
+- [fibaro](./plugins/inputs/fibaro/README.md) - Contributed by @dynek
+
+### Features
+
+- [#3964](https://github.com/influxdata/telegraf/pull/3964): Add repl_oplog_window_sec metric to mongodb input.
+- [#3819](https://github.com/influxdata/telegraf/pull/3819): Add per-host shard metrics in mongodb input.
+
 ## v1.6 [unreleased]
 
 ### Release Notes
 
-- The `mysql` input plugin has been updated to convert values to the
-  correct data type.  This may cause a `field type error` when inserting into
-  InfluxDB due the change of types.  It is recommended to drop the `mysql`,
-  `mysql_variables`, and `mysql_innodb`:
-  ```
-  DROP MEASUREMENT mysql
-  DROP MEASUREMENT mysql_variables
-  DROP MEASUREMENT mysql_innodb
-  ```
+- The `mysql` input plugin has been updated fix a number of type convertion
+  issues.  This may cause a `field type error` when inserting into InfluxDB due
+  the change of types.
+
+  To address this we have introduced a new `metric_version` option to control
+  enabling the new format.  For in depth recommendations on upgrading please
+  reference the [mysql plugin documentation](./plugins/inputs/mysql/README.md#metric-version).
+
+  It is encouraged to migrate to the new model when possible as the old version
+  is deprecated and will be removed in a future version.
 
 - The `postgresql` plugins now defaults to using a persistent connection to the database.
   In environments where TCP connections are terminated the `max_lifetime`
@@ -26,7 +38,8 @@
   is set.  It is encouraged to enable this option when possible as the old
   ordering is deprecated.
 
-- The `httpjson` is now deprecated, please migrate to the new `http` input.
+- The new `http` input configured with `data_format = "json"` can perform the
+  same task as the, now deprecated, `httpjson` input.
 
 
 ### New Inputs
@@ -82,6 +95,15 @@
 - [#3773](https://github.com/influxdata/telegraf/pull/3773): Add override processor.
 - [#3814](https://github.com/influxdata/telegraf/pull/3814): Add status_code and result tags and result_type field to http_response input.
 - [#3880](https://github.com/influxdata/telegraf/pull/3880): Added config flag to skip collection of network protocol metrics.
+- [#3927](https://github.com/influxdata/telegraf/pull/3927): Add TLS support to kapacitor input.
+- [#3496](https://github.com/influxdata/telegraf/pull/3496): Add HTTP basic auth support to the http_listener input.
+- [#3452](https://github.com/influxdata/telegraf/issues/3452): Tags in output InfluxDB Line Protocol are now sorted.
+- [#3631](https://github.com/influxdata/telegraf/issues/3631): InfluxDB Line Protocol parser now accepts DOS line endings.
+- [#2496](https://github.com/influxdata/telegraf/issues/2496): An option has been added to skip database creation in the InfluxDB output.
+- [#3366](https://github.com/influxdata/telegraf/issues/3366): Add support for connecting to InfluxDB over a unix domain socket.
+- [#3946](https://github.com/influxdata/telegraf/pull/3946): Add optional unsigned integer support to the influx data format.
+- [#3811](https://github.com/influxdata/telegraf/pull/3811): Add TLS support to zookeeper input.
+- [#2737](https://github.com/influxdata/telegraf/issues/2737): Add filters for container state to docker input.
 
 ### Bugfixes
 
@@ -89,6 +111,14 @@
 - [#3810](https://github.com/influxdata/telegraf/issues/3810): Fix metric buffer limit in internal plugin after reload.
 - [#3801](https://github.com/influxdata/telegraf/issues/3801): Fix panic in http_response on invalid regex.
 - [#3973](https://github.com/influxdata/telegraf/issues/3873): Fix socket_listener setting ReadBufferSize on tcp sockets.
+- [#1575](https://github.com/influxdata/telegraf/issues/1575): Add tag for target url to phpfpm input.
+- [#3868](https://github.com/influxdata/telegraf/issues/3868): Fix cannot unmarshal object error in DC/OS input.
+- [#3648](https://github.com/influxdata/telegraf/issues/3648): Fix InfluxDB output not able to reconnect when server address changes.
+- [#3957](https://github.com/influxdata/telegraf/issues/3957): Fix parsing of dos line endings in the smart input.
+- [#3754](https://github.com/influxdata/telegraf/issues/3754): Fix precision truncation when no timestamp included.
+- [#3655](https://github.com/influxdata/telegraf/issues/3655): Fix SNMPv3 connection with Cisco ASA 5515 in snmp input.
+- [#3981](https://github.com/influxdata/telegraf/pull/3981): Export all vars defined in /etc/default/telegraf.
+- [#4004](https://github.com/influxdata/telegraf/issues/4004): Allow grok pattern to contain newlines.
 
 ## v1.5.3 [2018-03-14]
 
