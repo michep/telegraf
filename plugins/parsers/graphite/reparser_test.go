@@ -43,6 +43,13 @@ var (
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>StoredQueue)\\.(?P<queue>[\\w]+?)\\.(?P<measurement>\\w+$)",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>requests)\\.(?P<type>\\w+$)",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>.+$)",
+
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?(Transmitter|Invoker))\\.(?P<peer>[\\w-]+?)\\.(?P<measurement>timer)\\.(?P<type>.+$)",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?Transmitter)\\.(?P<peer>[\\w-]+?)\\.(?P<measurement>.+$)",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?Pool)\\.(?P<peer>[\\w-]+?)\\.(?P<measurement>.+$)",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?(timer|histogram|meter|Time|Timer|Meter|Count|Duration|Locations))\\.(?P<type>.+$)",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?)\\.(?P<proto>/.+)\\.(?P<measurement>SystemError)\\.(?P<type>.+$)",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+$)",
 	}
 )
 
@@ -370,6 +377,120 @@ func TestTemplateApplyReParser(t *testing.T) {
 			input:       "pushdemo00.connector-http-brooma_demo_06.ConnectorOutMessageDlvStatusCounter.rejected.m1_rate",
 			measurement: "ConnectorOutMessageDlvStatusCounter",
 			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-http-brooma_demo_06", "type": "m1_rate", "status": "rejected"},
+		},
+		// =====================================================================================================================
+		// =====================================================================================================================
+		// =====================================================================================================================
+
+		{
+			input:       "connector-currencycourse_yahoo-prod_00.DataSourceFactoryBean.numActive",
+			measurement: "DataSourceFactoryBean.numActive",
+			tags:        map[string]string{"component": "connector-currencycourse_yahoo", "node": "prod_00"},
+		},
+		{
+			input:       "connector-storage_s3-prod_00.pools.Compressed-Class-Space.usage",
+			measurement: "pools.Compressed-Class-Space.usage",
+			tags:        map[string]string{"component": "connector-storage_s3", "node": "prod_00"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_00.AdvisaOperationDatabaseProcessor.StoredQueueProcessorJob.timer.max",
+			measurement: "AdvisaOperationDatabaseProcessor.StoredQueueProcessorJob.timer",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_00", "type": "max"},
+		},
+		{
+			input:       "server-web_advisa-prod_01.CoasAdvisaSubscriptionStatusEventConsumerImpl.StoredQueueProcessorJob.meter.m5_rate",
+			measurement: "CoasAdvisaSubscriptionStatusEventConsumerImpl.StoredQueueProcessorJob.meter",
+			tags:        map[string]string{"component": "server-web_advisa", "node": "prod_01", "type": "m5_rate"},
+		},
+		{
+			input:       "server-web_advisa-prod_01.CoasBankNotificationConsumerImpl.StoredQueueProcessorJob.histogram.p98",
+			measurement: "CoasBankNotificationConsumerImpl.StoredQueueProcessorJob.histogram",
+			tags:        map[string]string{"component": "server-web_advisa", "node": "prod_01", "type": "p98"},
+		},
+		{
+			input:       "server-web_advisa-prod_01.CoasCardTransactionWithNewTerminalDatabaseProcessor.createTerminalTimer.min",
+			measurement: "CoasCardTransactionWithNewTerminalDatabaseProcessor.createTerminalTimer",
+			tags:        map[string]string{"component": "server-web_advisa", "node": "prod_01", "type": "min"},
+		},
+		{
+			input:       "server-web_advisa-prod_01.SystemJournalService.writeFirstSyncIfNeededDuration.mean_rate",
+			measurement: "SystemJournalService.writeFirstSyncIfNeededDuration",
+			tags:        map[string]string{"component": "server-web_advisa", "node": "prod_01", "type": "mean_rate"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_01.AdvisaOperationDlvEventDatabaseProcessor.StoredQueueProcessorJob.histogram.stddev",
+			measurement: "AdvisaOperationDlvEventDatabaseProcessor.StoredQueueProcessorJob.histogram",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_01", "type": "stddev"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_01.BankIncomingSmsService.avgBatchTime.mean_rate",
+			measurement: "BankIncomingSmsService.avgBatchTime",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_01", "type": "mean_rate"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_00.AdvisaConnectorSubscriptionDatabaseAccessor.databaseErrorCount.mean_rate",
+			measurement: "AdvisaConnectorSubscriptionDatabaseAccessor.databaseErrorCount",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_00", "type": "mean_rate"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_00.AdvisaOperationProcessor.avgSpeedMeter.mean_rate",
+			measurement: "AdvisaOperationProcessor.avgSpeedMeter",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_00", "type": "mean_rate"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_00.CoasBonusBallUpdateOperationTransmitterPool.server-web_advisa-prod_01.percent",
+			measurement: "CoasBonusBallUpdateOperationTransmitterPool.percent",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_00", "peer": "server-web_advisa-prod_01"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_00.CoasSubscriptionStatusEventTransmitterPool.Transmitter.server-web_advisa-prod_00.timer.p95",
+			measurement: "CoasSubscriptionStatusEventTransmitterPool.Transmitter.timer",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_00", "peer": "server-web_advisa-prod_00", "type": "p95"},
+		},
+		{
+			input:       "connector-operations_smsparse-prod_00.CoasAccountTransactionTransmitterPool.Transmitter.server-web_advisa-prod_01.queueSize",
+			measurement: "CoasAccountTransactionTransmitterPool.Transmitter.queueSize",
+			tags:        map[string]string{"component": "connector-operations_smsparse", "node": "prod_00", "peer": "server-web_advisa-prod_01"},
+		},
+		{
+			input:       "connector-registration-prod_00.CoasAdvisaRegistrationConfirmationResponseTransmitter.server-web_advisa-prod_00.timer.p999",
+			measurement: "CoasAdvisaRegistrationConfirmationResponseTransmitter.timer",
+			tags:        map[string]string{"component": "connector-registration", "node": "prod_00", "peer": "server-web_advisa-prod_00", "type": "p999"},
+		},
+		{
+			input:       "server-web_advisa-prod_00.com.mfms.advisa.web.utils.spring.ProtobufHttpMessageConverter./service/sync/do.ru.raiffeisenbank.rconnect.IOS.SystemError.m1_rate",
+			measurement: "com.mfms.advisa.web.utils.spring.ProtobufHttpMessageConverter.SystemError",
+			tags:        map[string]string{"component": "server-web_advisa", "node": "prod_00", "proto": "/service/sync/do.ru.raiffeisenbank.rconnect.IOS", "type": "m1_rate"},
+		},
+		{
+			input:       "connector-terminal-prod_00.TerminalFullTextIndexingProcessor.terminalGetWithLocations.p95",
+			measurement: "TerminalFullTextIndexingProcessor.terminalGetWithLocations",
+			tags:        map[string]string{"component": "connector-terminal", "node": "prod_00", "type": "p95"},
+		},
+		{
+			input:       "connector-terminal_enricher-prod_00.CoasTerminalConnectorSimilarServicePool.connector-terminal-prod_01.percent",
+			measurement: "CoasTerminalConnectorSimilarServicePool.percent",
+			tags:        map[string]string{"component": "connector-terminal_enricher", "node": "prod_00", "peer": "connector-terminal-prod_01"},
+		},
+		{
+			input:       "connector-terminal_enricher-prod_00.CoasTerminalConnectorSimilarServicePool.ServiceInvoker.connector-terminal-prod_01.timer.p95",
+			measurement: "CoasTerminalConnectorSimilarServicePool.ServiceInvoker.timer",
+			tags:        map[string]string{"component": "connector-terminal_enricher", "node": "prod_00", "peer": "connector-terminal-prod_01", "type": "p95"},
+		},
+		{
+			input:       "server-problem_devices-prod_00.G1-Old-Generation.count",
+			measurement: "G1-Old-Generation.count",
+			tags:        map[string]string{"component": "server-problem_devices", "node": "prod_00"},
+		},
+		{
+			input:       "server-web_advisa-prod_01.heap.used",
+			measurement: "heap.used",
+			tags:        map[string]string{"component": "server-web_advisa", "node": "prod_01"},
+		},
+		{
+			input:       "server-push_reports-prod_00.pools.G1-Survivor-Space.usage",
+			measurement: "pools.G1-Survivor-Space.usage",
+			tags:        map[string]string{"component": "server-push_reports", "node": "prod_00"},
 		},
 	}
 
