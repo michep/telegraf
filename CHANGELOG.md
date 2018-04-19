@@ -3,13 +3,25 @@
 ### New Inputs
 
 - [fibaro](./plugins/inputs/fibaro/README.md) - Contributed by @dynek
+- [nvidia_smi](./plugins/inputs/nvidia_smi/README.md) - Contributed by @jackzampolin
 
 ### Features
 
 - [#3964](https://github.com/influxdata/telegraf/pull/3964): Add repl_oplog_window_sec metric to mongodb input.
 - [#3819](https://github.com/influxdata/telegraf/pull/3819): Add per-host shard metrics in mongodb input.
+- [#3999](https://github.com/influxdata/telegraf/pull/3999): Skip files with leading `..` in config directory.
+- [#4021](https://github.com/influxdata/telegraf/pull/4021): Add TLS support to socket_writer and socket_listener plugins.
+- [#4025](https://github.com/influxdata/telegraf/pull/4025): Add snmp input option to strip non fixed length index suffixes.
 
-## v1.6 [unreleased]
+## v1.6.1 [unreleased]
+
+### Bugfixes
+
+- [#3835](https://github.com/influxdata/telegraf/issues/3835): Report mem input fields as gauges instead counters.
+- [#4030](https://github.com/influxdata/telegraf/issues/4030): Fix graphite outputs unsigned integers in wrong format.
+- [#4043](https://github.com/influxdata/telegraf/issues/4043): Report available fields if utmp is unreadable.
+
+## v1.6 [2018-04-16]
 
 ### Release Notes
 
