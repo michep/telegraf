@@ -1,5 +1,12 @@
 ## v1.7 [unreleased]
 
+### Release Notes
+
+- The `cassandra` input plugin has been deprecated in favor of the `jolokia2`
+  input plugin which is much more configurable and more performant.  There is
+  an [example configuration](./plugins/inputs/jolokia2/examples) to help you
+  get started.
+
 ### New Inputs
 
 - [fibaro](./plugins/inputs/fibaro/README.md) - Contributed by @dynek
@@ -12,14 +19,28 @@
 - [#3999](https://github.com/influxdata/telegraf/pull/3999): Skip files with leading `..` in config directory.
 - [#4021](https://github.com/influxdata/telegraf/pull/4021): Add TLS support to socket_writer and socket_listener plugins.
 - [#4025](https://github.com/influxdata/telegraf/pull/4025): Add snmp input option to strip non fixed length index suffixes.
+- [#4035](https://github.com/influxdata/telegraf/pull/4035): Add server version tag to docker input.
+- [#4044](https://github.com/influxdata/telegraf/pull/4044): Add support for LeoFS 1.4 to leofs input.
+- [#4068](https://github.com/influxdata/telegraf/pull/4068): Add parameter to force the interval of gather for sysstat.
 
-## v1.6.1 [unreleased]
+### Bugfixes
+
+- [#4018](https://github.com/influxdata/telegraf/pull/4018): Write to working file outputs if any files are not writeable.
+
+## v1.6.1 [2018-04-23]
 
 ### Bugfixes
 
 - [#3835](https://github.com/influxdata/telegraf/issues/3835): Report mem input fields as gauges instead counters.
 - [#4030](https://github.com/influxdata/telegraf/issues/4030): Fix graphite outputs unsigned integers in wrong format.
 - [#4043](https://github.com/influxdata/telegraf/issues/4043): Report available fields if utmp is unreadable.
+- [#4039](https://github.com/influxdata/telegraf/issues/4039): Fix potential "no fields" error writing to outputs.
+- [#4037](https://github.com/influxdata/telegraf/issues/4037): Fix uptime reporting in system input when ran inside docker.
+- [#3750](https://github.com/influxdata/telegraf/issues/3750): Fix mem input "cannot allocate memory" error on FreeBSD based systems.
+- [#4056](https://github.com/influxdata/telegraf/pull/4056): Fix duplicate tags when overriding an existing tag.
+- [#4062](https://github.com/influxdata/telegraf/pull/4062): Add server argument as first argument in unbound input.
+- [#4063](https://github.com/influxdata/telegraf/issues/4063): Fix handling of floats with multiple leading zeroes.
+- [#4064](https://github.com/influxdata/telegraf/issues/4064): Return errors in mongodb SSL/TLS configuration.
 
 ## v1.6 [2018-04-16]
 
