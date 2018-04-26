@@ -6,11 +6,16 @@ import (
 	"strings"
 )
 
+type replacer struct {
+	template *regexp.Regexp
+	format   string
+}
+
 type GraphiteReParser struct {
 	Separator            string
 	DefaultTags          map[string]string
 	MeasurementGroupName string
-	templates            []*regexp.Regexp
+	templates            []replacer
 }
 
 func NewGraphiteReParser(separator, measurementgroupname string, templates []string, defaultTags map[string]string) (*GraphiteReParser, error) {
@@ -22,23 +27,27 @@ func NewGraphiteReParser(separator, measurementgroupname string, templates []str
 	if separator == "" {
 		separator = DefaultSeparator
 	}
-	p := &GraphiteReParser{
-		Separator: separator,
-	}
-
 	if measurementgroupname == "" {
 		measurementgroupname = "measurement"
 	}
-	p.MeasurementGroupName = measurementgroupname
+	p := &GraphiteReParser{
+		Separator:            separator,
+		MeasurementGroupName: measurementgroupname,
+	}
 
 	if defaultTags != nil {
 		p.DefaultTags = defaultTags
 	}
 
 	for _, template := range templates {
-		re, err = regexp.Compile(template)
+		parts := strings.Split(template, " => ")
+		if len(parts) != 2 {
+			return p, fmt.Errorf("exec input parser config is error: no => in template")
+		}
+		re, err = regexp.Compile(parts[0])
 		if err == nil {
-			p.templates = append(p.templates, re)
+			repl := replacer{template: re, format: parts[1]}
+			p.templates = append(p.templates, repl)
 		} else {
 			return p, fmt.Errorf("exec input parser config is error: %s ", err.Error())
 		}
@@ -60,10 +69,11 @@ func (p *GraphiteReParser) ApplyTemplate(line string) (string, map[string]string
 		return "", make(map[string]string), "", nil
 	}
 	name := fields[0]
-	for _, regex := range p.templates {
-		matches = regex.FindStringSubmatch(name)
+	for _, repl := range p.templates {
+		matches = repl.template.FindStringSubmatch(name)
 		if len(matches) > 0 {
-			metricname, tags = p.parseName(matches, regex.SubexpNames())
+			tags = p.parseTags(matches, repl.template)
+			metricname = repl.template.ReplaceAllString(name, repl.format)
 			found = true
 			break
 		}
@@ -74,24 +84,11 @@ func (p *GraphiteReParser) ApplyTemplate(line string) (string, map[string]string
 	return metricname, tags, "", nil
 }
 
-func (p *GraphiteReParser) parseName(matches, subnames []string) (name string, dynamic map[string]string) {
-	var sep string
+func (p *GraphiteReParser) parseTags(matches []string, regexp *regexp.Regexp) (dynamic map[string]string) {
 	dynamic = make(map[string]string)
-	for idx, subname := range subnames {
-		if subname != "" {
-			sep = strings.TrimSuffix(subname, p.MeasurementGroupName)
-			switch {
-			case len(sep) == 0:
-				name = p.concat(name, matches[idx], p.Separator) // no prefix, use configured separator for metric name
-			case sep == "_":
-				name = p.concat(name, matches[idx], "") // underscore prefix, use no separator for metric name
-			case sep == "__":
-				name = p.concat(name, matches[idx], "_") // double underscore prefix, use underscore separator for metric name
-			case sep != subname:
-				name = p.concat(name, matches[idx], sep) // found a prefix, use it as separator
-			case sep == subname:
-				dynamic[subname] = p.concat(dynamic[subname], matches[idx], p.Separator) // tag name, use configured separator
-			}
+	for idx, subname := range regexp.SubexpNames() {
+		if subname != "" && !strings.HasPrefix(subname, p.MeasurementGroupName) {
+			dynamic[subname] = p.concat(dynamic[subname], matches[idx], p.Separator)
 		}
 	}
 	return

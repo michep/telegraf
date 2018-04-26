@@ -6,55 +6,55 @@ import (
 )
 
 var (
-	re_templates []string = []string{
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate\\.route)\\.(?P<system>[\\w-]+?)\\.(?P<chl_group>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+?TimeCounter)\\.(?P<time>\\w+?$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>Connector(Batch)?)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?:\\w*?)(?P<measurement>(SmsPost|SmsGet).+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>Connector)(?:\\d*?)(?P<_measurement>DatabaseAccessor)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<measurement>(SmsPost|SmsGet)\\w+)\\.(?:\\w*?)(?P<measurement>(SmsPost|SmsGet).+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>RcoiConnectorInMessageTransmitter)\\.(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>telegramBot)-(?P<bot>[\\w-]+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>ClientProcessor)\\.(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Transmitter)(?:-|\\.)(?P<peer>\\w+?\\d+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Receiver)-(?P<peer>[\\w-]+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?deliveryMonitorDurationCounter)\\.(?P<type>\\w+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?payloadOutPacketQueue)\\.(?P<peer>[\\w]+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?channelInMessageProcessMonitorAvgThroughputCounter)\\.(?P<subject>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?PercentileCounter)\\.(?P<percentile>\\w+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?(lastRequestDate|lastMessageTime|messagesPerMinute))\\.(?P<peer>\\w+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?(operator|source))\\.(?P<peer>[\\w-]+)\\.(?P<measurement>period)\\.(?P<period>\\w+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?(operator|source))\\.(?P<peer>[\\w-]+)\\.(?P<measurement>status)\\.(?P<status>\\w+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?\\.priority)\\.(?P<priority>\\w+?)\\.(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+?)\\.(?:\\.+)(?P<measurement>.+$)",
-		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<measurement>.+$)",
+	re_templates = []string{
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>Gate\\.route)\\.(?P<system>[\\w-]+?)\\.(?P<chl_group>.+$) => ${metric1}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<metric2>.+?TimeCounter)\\.(?P<time>\\w+?$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<metric2>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<metric3>.+$) => ${metric1}.${metric2}.${metric3}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<metric2>\\w+?Transmitter)-(?P<peer>\\w+?\\d+?)\\.(?P<metric3>.+$) => ${metric1}.${metric2}.${metric3}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>Gate)\\.(?P<gatecomponent>(ifm\\.\\w+?)|(\\w+?))\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<metric1>Connector(Batch)?)(?:\\d*?)(?P<metric2>DatabaseAccessor)\\.(?:\\w*?)(?P<metric3>(SmsPost|SmsGet).+$) => ${metric1}${metric2}.${metric3}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<metric1>Connector)(?:\\d*?)(?P<metric2>DatabaseAccessor)\\.(?P<metric3>.+$) => ${metric1}${metric2}.${metric3}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?:\\w*?)(?P<metric1>(SmsPost|SmsGet)\\w+)\\.(?:\\w*?)(?P<metric2>(SmsPost|SmsGet).+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?[Mm]essageQueue)\\.(?P<queue>\\w+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>RcoiConnectorInMessageTransmitter)\\.(?P<peer>\\w+?\\d+?)\\.(?P<metric2>.+$) => ${metric1}.peer.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>telegramBot)-(?P<bot>[\\w-]+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>ClientProcessor)\\.(?P<peer>[\\w]+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>\\w+?Transmitter)(?:-|\\.)(?P<peer>\\w+?\\d+?)\\.(?P<metric2>.+$) => ${metric1}.peer.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>\\w+?Receiver)-(?P<peer>[\\w-]+?)\\.(?P<metric2>.+$) => ${metric1}.peer.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?deliveryMonitorDurationCounter)\\.(?P<type>\\w+$) => ${metric1}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$) => ${metric1}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?payloadOutPacketQueue)\\.(?P<peer>[\\w]+?)\\.(?P<metric2>.+$) => ${metric1}.peer.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?channelInMessageProcessMonitorAvgThroughputCounter)\\.(?P<subject>.+$) => ${metric1}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?PercentileCounter)\\.(?P<percentile>\\w+$) => ${metric1}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?(lastRequestDate|lastMessageTime|messagesPerMinute))\\.(?P<peer>\\w+$) => ${metric1}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?(operator|source))\\.(?P<peer>[\\w-]+)\\.(?P<metric2>period)\\.(?P<period>\\w+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?(operator|source))\\.(?P<peer>[\\w-]+)\\.(?P<metric2>status)\\.(?P<status>\\w+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?\\.priority)\\.(?P<priority>\\w+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?)\\.(?:\\.+)(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+$) => ${metric1}",
 
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?ChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<measurement>.+?(?:Count|Timer))\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?ChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<measurement>.+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?ChannelSender)\\.(?P<appid>[\\w.-]+?)\\.(?P<measurement>(?:http|send|success)[\\w]+?)\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>\\w+?OutMessageDlvStatusCounter)\\.(?P<status>\\w+?)\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>.+?(Delivered|Sent|Failed|Count|Timer|Meter|\\.meter))\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>pools)\\.(?P<measurement>[\\w-]+?)\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>StoredQueue)\\.(?P<queue>[\\w]+?)\\.(?P<measurement>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>requests)\\.(?P<type>\\w+$)",
-		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<measurement>.+$)",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>\\w+?ChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<metric2>.+?(?:Count|Timer))\\.(?P<type>\\w+$) => ${metric1}.${metric2}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>\\w+?ChannelSender)(?:-appId-)(?P<appid>\\d+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>\\w+?ChannelSender)\\.(?P<appid>[\\w.-]+?)\\.(?P<metric2>(?:http|send|success)[\\w]+?)\\.(?P<type>\\w+$) => ${metric1}.${metric2}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>\\w+?OutMessageDlvStatusCounter)\\.(?P<status>\\w+?)\\.(?P<type>\\w+$) => ${metric1}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.+?(Delivered|Sent|Failed|Count|Timer|Meter|\\.meter))\\.(?P<type>\\w+$) => ${metric1}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>pools)\\.(?P<metric2>[\\w-]+?)\\.(?P<type>\\w+$) => ${metric1}.${metric2}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>StoredQueue)\\.(?P<queue>[\\w]+?)\\.(?P<metric2>\\w+$) => ${metric1}.${metric2}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>requests)\\.(?P<type>\\w+$) => ${metric1}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.+$) => ${metric1}",
 
-		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?(Transmitter|Invoker))\\.(?P<peer>[\\w-]+?)\\.(?P<measurement>timer)\\.(?P<type>.+$)",
-		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?Transmitter)\\.(?P<peer>[\\w-]+?)\\.(?P<measurement>.+$)",
-		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?Pool)\\.(?P<peer>[\\w-]+?)\\.(?P<measurement>.+$)",
-		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?(timer|histogram|meter|Time|Timer|Meter|Count|Duration|Locations))\\.(?P<type>.+$)",
-		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+?)\\.(?P<proto>/.+)\\.(?P<measurement>SystemError)\\.(?P<type>.+$)",
-		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<measurement>.+$)",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<metric1>.+?(Transmitter|Invoker))\\.(?P<peer>[\\w-]+?)\\.(?P<metric2>timer)\\.(?P<type>.+$) => ${metric1}.${metric2}",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<metric1>.+?Transmitter)\\.(?P<peer>[\\w-]+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<metric1>.+?Pool)\\.(?P<peer>[\\w-]+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<metric1>.+?(timer|histogram|meter|Time|Timer|Meter|Count|Duration|Locations))\\.(?P<type>.+$) => ${metric1}",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<metric1>.+?)\\.(?P<proto>/.+)\\.(?P<metric2>SystemError)\\.(?P<type>.+$) => ${metric1}.${metric2}",
+		"(?P<component>[\\w-]+)-(?P<node>[\\w-]+?_\\d{2})\\.(?P<metric1>.+$) => ${metric1}",
 	}
 )
 
 func BenchmarkParseReParser(b *testing.B) {
-	p, _ := NewGraphiteReParser(".", "measurement", re_templates, nil)
+	p, _ := NewGraphiteReParser(".", "metric", re_templates, nil)
 
 	for i := 0; i < b.N; i++ {
 		p.ApplyTemplate("MfmsMonitor.manager-base-sbmanager3.zsbmng03.UndeliverableAddressChannelMessageProcessor.undeliverableAddressChannelMessageProcessQueueProcessor.priority.6.size")
@@ -81,13 +81,23 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "MfmsMonitor.manager-base-sbmanager3.zsbmng03.ComiConnectorOutMessageReceiver-sb8.receivedConnectorOutMessageMonitorAvgThroughputCounter",
-			measurement: "ComiConnectorOutMessageReceiver.receivedConnectorOutMessageMonitorAvgThroughputCounter",
+			measurement: "ComiConnectorOutMessageReceiver.peer.receivedConnectorOutMessageMonitorAvgThroughputCounter",
 			tags:        map[string]string{"component": "manager-base-sbmanager3", "zone": "zsbmng03", "peer": "sb8", "name": "sbmanager3"},
 		},
 		{
+			input:       "MfmsMonitor.manager-base-manager0.zmng00.ComiConnectorOutMessageReceiver.receivedConnectorOutMessageMonitorAvgThroughputCounter",
+			measurement: "ComiConnectorOutMessageReceiver.receivedConnectorOutMessageMonitorAvgThroughputCounter",
+			tags:        map[string]string{"component": "manager-base-manager0", "zone": "zmng00", "name": "manager0"},
+		},
+		{
 			input:       "MfmsMonitor.channel-smpp-alfacapmts0.zchl10.CmiChannelStateTransmitter-sbmanager1.channelStateProcessQueueProcessor.size",
-			measurement: "CmiChannelStateTransmitter.channelStateProcessQueueProcessor.size",
+			measurement: "CmiChannelStateTransmitter.peer.channelStateProcessQueueProcessor.size",
 			tags:        map[string]string{"component": "channel-smpp-alfacapmts0", "zone": "zchl10", "peer": "sbmanager1", "name": "alfacapmts0"},
+		},
+		{
+			input:       "MfmsMonitor.channel-beelineussd-beelineussd0.zchl04.CmiChannelStateTransmitter.channelStateProcessQueueProcessor.size",
+			measurement: "CmiChannelStateTransmitter.channelStateProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "channel-beelineussd-beelineussd0", "zone": "zchl04", "name": "beelineussd0"},
 		},
 		{
 			input:       "MfmsMonitor.connector-emailfileex-vtb2414.zcnr08.EmailFileExConnectorDatabaseAccessor.databaseInteractionErrorMonitorAvgThroughputCounter.io",
@@ -131,7 +141,7 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "MfmsMonitor.receiver-base-receiver1.zchl04.RcoiConnectorInMessageTransmitter.binbank5.connectorInMessageProcessQueueProcessor.size",
-			measurement: "RcoiConnectorInMessageTransmitter.connectorInMessageProcessQueueProcessor.size",
+			measurement: "RcoiConnectorInMessageTransmitter.peer.connectorInMessageProcessQueueProcessor.size",
 			tags:        map[string]string{"component": "receiver-base-receiver1", "zone": "zchl04", "peer": "binbank5", "name": "receiver1"},
 		},
 		{
@@ -171,7 +181,7 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "MfmsMonitor.manager-base-manager0.zmng00.ComiConnectorOutMessageReceiver-bistrodengi-web3.receivedConnectorOutMessageMonitorAvgThroughputCounter",
-			measurement: "ComiConnectorOutMessageReceiver.receivedConnectorOutMessageMonitorAvgThroughputCounter",
+			measurement: "ComiConnectorOutMessageReceiver.peer.receivedConnectorOutMessageMonitorAvgThroughputCounter",
 			tags:        map[string]string{"component": "manager-base-manager0", "zone": "zmng00", "peer": "bistrodengi-web3", "name": "manager0"},
 		},
 		{
@@ -201,7 +211,7 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "MfmsMonitor.imreceiver-base-imreceiver0.imsrv00.ImrvcoiConnectorInInstantMessageTransmitter.webclient0.connectorInInstantMessageProcessMonitorAvgSpeedCounter",
-			measurement: "ImrvcoiConnectorInInstantMessageTransmitter.connectorInInstantMessageProcessMonitorAvgSpeedCounter",
+			measurement: "ImrvcoiConnectorInInstantMessageTransmitter.peer.connectorInInstantMessageProcessMonitorAvgSpeedCounter",
 			tags:        map[string]string{"component": "imreceiver-base-imreceiver0", "zone": "imsrv00", "peer": "webclient0", "name": "imreceiver0"},
 		},
 		{
@@ -211,7 +221,7 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "MfmsMonitor.smppproxy-base-vtb24mts0.zchl06.OutPacketProcessor.payloadOutPacketQueue.vtb24mts0.size",
-			measurement: "OutPacketProcessor.payloadOutPacketQueue.size",
+			measurement: "OutPacketProcessor.payloadOutPacketQueue.peer.size",
 			tags:        map[string]string{"component": "smppproxy-base-vtb24mts0", "zone": "zchl06", "peer": "vtb24mts0", "name": "vtb24mts0"},
 		},
 		{
@@ -241,7 +251,7 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 		{
 			input:       "MfmsMonitor.manager-base-manager0.zmng00.ComiConnectorOutMessageReceiver-bistrodengi-web6.receivedConnectorOutMessageMonitorAvgThroughputCounter",
-			measurement: "ComiConnectorOutMessageReceiver.receivedConnectorOutMessageMonitorAvgThroughputCounter",
+			measurement: "ComiConnectorOutMessageReceiver.peer.receivedConnectorOutMessageMonitorAvgThroughputCounter",
 			tags:        map[string]string{"component": "manager-base-manager0", "zone": "zmng00", "peer": "bistrodengi-web6", "name": "manager0"},
 		},
 		{
@@ -494,7 +504,7 @@ func TestTemplateApplyReParser(t *testing.T) {
 		},
 	}
 
-	p, err := NewGraphiteReParser(".", "measurement", re_templates, nil)
+	p, err := NewGraphiteReParser(".", "metric", re_templates, nil)
 	if err != nil {
 		t.Fatal("error parsin regexp: ", err)
 	}
