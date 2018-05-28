@@ -28,7 +28,7 @@ func NewGraphiteReParser(separator, measurementgroupname string, templates []str
 		separator = DefaultSeparator
 	}
 	if measurementgroupname == "" {
-		measurementgroupname = "measurement"
+		measurementgroupname = "metric"
 	}
 	p := &GraphiteReParser{
 		Separator:            separator,
