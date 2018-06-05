@@ -144,6 +144,16 @@ func TestTemplateApplyReParser(t *testing.T) {
 			tags:        map[string]string{"component": "receiver-base-receiver1", "zone": "zchl04", "peer": "binbank5", "name": "receiver1"},
 		},
 		{
+			input:       "MfmsMonitor.receiver-base-receiver0.zchl06.RcoiConnectorInMessageTransmitter.connectorInMessageProcessQueueProcessor.size",
+			measurement: "RcoiConnectorInMessageTransmitter.connectorInMessageProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "receiver-base-receiver0", "zone": "zchl06", "name": "receiver0"},
+		},
+		{
+			input:       "MfmsMonitor.receiver-base-receiver0.zchl06.RcoiConnectorInMessageTransmitter.ftc33.connectorInMessageProcessQueueProcessor.size",
+			measurement: "RcoiConnectorInMessageTransmitter.peer.connectorInMessageProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "receiver-base-receiver0", "zone": "zchl06", "peer": "ftc33", "name": "receiver0"},
+		},
+		{
 			input:       "MfmsMonitor.connector-emp-mospark1.zcnr03.ComiConnectorOutMessageTransmitterManager.processedConnectorOutMessageMonitorPercentileCounter.90",
 			measurement: "ComiConnectorOutMessageTransmitterManager.processedConnectorOutMessageMonitorPercentileCounter",
 			tags:        map[string]string{"component": "connector-emp-mospark1", "zone": "zcnr03", "percentile": "90", "name": "mospark1"},
@@ -287,6 +297,31 @@ func TestTemplateApplyReParser(t *testing.T) {
 			input:       "MfmsMonitor.connector-hpx-rbr1.zcnr06.n1.source.messagesPerMinute.RETAIL_MA",
 			measurement: "n1.source.messagesPerMinute",
 			tags:        map[string]string{"component": "connector-hpx-rbr1", "zone": "zcnr06", "peer": "RETAIL_MA", "name": "rbr1"},
+		},
+		{
+			input:       "MfmsMonitor.smppproxy-base-mts1.zchl06.ClientProcessor.mts11.bound",
+			measurement: "ClientProcessor.bound",
+			tags:        map[string]string{"component": "smppproxy-base-mts1", "zone": "zchl06", "peer": "mts11", "name": "mts1"},
+		},
+		{
+			input:       "MfmsMonitor.smppproxy-base-mts1.zchl06.OutPacketProcessor.payloadOutPacketQueue.mts19.size",
+			measurement: "OutPacketProcessor.payloadOutPacketQueue.peer.size",
+			tags:        map[string]string{"component": "smppproxy-base-mts1", "zone": "zchl06", "peer": "mts19", "name": "mts1"},
+		},
+		{
+			input:       "MfmsMonitor.webclient-base-webclient0.zonline.CoimriConnectorOutInstantMessageTransmitter-imrouter0.connectorOutInstantMessageProcessQueueProcessor.size",
+			measurement: "CoimriConnectorOutInstantMessageTransmitter.peer.connectorOutInstantMessageProcessQueueProcessor.size",
+			tags:        map[string]string{"component": "webclient-base-webclient0", "zone": "zonline", "peer": "imrouter0", "name": "webclient0"},
+		},
+		{
+			input:       "MfmsMonitor.avirouter-base-avirouter0.zchl09.ArcoiAdvisaOutMessageDlvEventTransmitter.advisaOutMessageDlvEventProcessMonitorAvgSpeedCounter",
+			measurement: "ArcoiAdvisaOutMessageDlvEventTransmitter.advisaOutMessageDlvEventProcessMonitorAvgSpeedCounter",
+			tags:        map[string]string{"component": "avirouter-base-avirouter0", "zone": "zchl09", "name": "avirouter0"},
+		},
+		{
+			input:       "MfmsMonitor.avirouter-base-avirouter0.zchl09.ArcoiAdvisaOutMessageDlvEventTransmitter-alfa10.advisaOutMessageDlvEventProcessMonitorAvgSpeedCounter",
+			measurement: "ArcoiAdvisaOutMessageDlvEventTransmitter.peer.advisaOutMessageDlvEventProcessMonitorAvgSpeedCounter",
+			tags:        map[string]string{"component": "avirouter-base-avirouter0", "zone": "zchl09", "peer": "alfa10", "name": "avirouter0"},
 		},
 		// =====================================================================================================================
 		// =====================================================================================================================
