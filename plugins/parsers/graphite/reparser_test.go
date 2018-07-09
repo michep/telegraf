@@ -38,6 +38,7 @@ var (
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>ClientOutMessageDlvStatusCounter)\\.(?P<status>[\\w]+?)\\.(?P<type>\\w+$) => ${metric1}",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>ConnectorOutMessageDlvStatusCounter)\\.(?P<status>[\\w]+?)\\.(?P<type>\\w+$) => ${metric1}",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.+Sender)\\.(?P<peer>[\\w]+?\\d+)\\.(?P<metric2>.+)\\.(?P<type>\\w+$) => ${metric1}.${metric2}",
+		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.+Sender)\\.(?P<peer>[\\w]+?\\d+)\\.(?P<metric2>\\w+$) => ${metric1}.${metric2}",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.*Transmitter.*?)\\.(?P<peer>[\\w-]+?\\d+)\\.(?P<metric2>(size|queueSize)$) => ${metric1}.${metric2}",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.*Transmitter.*?)\\.(?P<peer>[\\w-]+?\\d+)\\.(?P<metric2>.+)\\.(?P<type>\\w+$) => ${metric1}.${metric2}",
 		"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>[\\w-]+$) => ${metric1}",
@@ -323,6 +324,21 @@ func TestTemplateApplyReParser(t *testing.T) {
 			measurement: "ArcoiAdvisaOutMessageDlvEventTransmitter.peer.advisaOutMessageDlvEventProcessMonitorAvgSpeedCounter",
 			tags:        map[string]string{"component": "avirouter-base-avirouter0", "zone": "zchl09", "peer": "alfa10", "name": "avirouter0"},
 		},
+		{
+			input:       "MfmsMonitor.connector-smpp-a31.zcnr05.SmppConnectorDatabaseAccessor.databaseInteractionErrorMonitorAvgThroughputCounter",
+			measurement: "ConnectorDatabaseAccessor.databaseInteractionErrorMonitorAvgThroughputCounter",
+			tags:        map[string]string{"component": "connector-smpp-a31", "zone": "zcnr05", "name": "a31"},
+		},
+		{
+			input:       "MfmsMonitor.connector-direct-testnccussd00.zcnr00.DirectConnectorDatabaseAccessor.databaseInteractionErrorMonitorAvgThroughputCounter.io",
+			measurement: "ConnectorDatabaseAccessor.databaseInteractionErrorMonitorAvgThroughputCounter.io",
+			tags:        map[string]string{"component": "connector-direct-testnccussd00", "zone": "zcnr00", "name": "testnccussd00"},
+		},
+		{
+			input:       "MfmsMonitor.channel-smpp-amdtelecom2.zchl07.ResendProcessor.commandStatusMonitorAvgThroughputCounter.error",
+			measurement: "ResendProcessor.commandStatusMonitorAvgThroughputCounter",
+			tags:        map[string]string{"component": "channel-smpp-amdtelecom2", "zone": "zchl07", "name": "amdtelecom2", "status": "error"},
+		},
 		// =====================================================================================================================
 		// =====================================================================================================================
 		// =====================================================================================================================
@@ -426,6 +442,26 @@ func TestTemplateApplyReParser(t *testing.T) {
 			input:       "pushdemo00.channel-push_apnshttp-demo_00.StoredQueue.Transmitter.CmiPushMessageDlvEvent.connector-http-tcsbankdemo_00.size",
 			measurement: "StoredQueue.Transmitter.CmiPushMessageDlvEvent.size",
 			tags:        map[string]string{"hostname": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "peer": "connector-http-tcsbankdemo_00"},
+		},
+		{
+			input:       "pushdemo00.connector-gate-sovcombankdemo_00.PlatformPacketListener.errorPacketCount",
+			measurement: "PlatformPacketListener",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-gate-sovcombankdemo_00", "type": "errorPacketCount"}, //!!!
+		},
+		{
+			input:       "pushdemo00.connector-gate-bcsdemo_00.PlatformPacketListener.outMessageTimer.p95",
+			measurement: "PlatformPacketListener.outMessageTimer",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-gate-bcsdemo_00", "type": "p95"},
+		},
+		{
+			input:       "pushdemo00.connector-gate-sbdemo_04.PlatformPacketListener.latestReceivedPacketTimestamp",
+			measurement: "PlatformPacketListener",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-gate-sbdemo_04", "type": "latestReceivedPacketTimestamp"}, //!!!
+		},
+		{
+			input:       "pushdemo00.channel-push_apnshttp-demo_00.ApnsHttpChannelSender.ru_sberbank_onlineiphone_beta_42.certificateValidDayCount",
+			measurement: "ApnsHttpChannelSender.certificateValidDayCount",
+			tags:        map[string]string{"hostname": "pushdemo00", "component": "channel-push_apnshttp-demo_00", "peer": "ru_sberbank_onlineiphone_beta_42"},
 		},
 		// =====================================================================================================================
 		// =====================================================================================================================
