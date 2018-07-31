@@ -3,6 +3,7 @@ package opentsdb
 import (
 	"fmt"
 	"log"
+	"math"
 	"net"
 	"net/url"
 	"regexp"
@@ -140,6 +141,10 @@ func (o *OpenTSDB) WriteHttp(metrics []telegraf.Metric, u *url.URL) error {
 			case int64:
 			case uint64:
 			case float64:
+				if math.IsNaN(value.(float64)) {
+					log.Printf("D! OpenTSDB does not support NaN value")
+					continue
+				}
 			default:
 				log.Printf("D! OpenTSDB does not support metric value: [%s] of type [%T].\n", value, value)
 				continue
