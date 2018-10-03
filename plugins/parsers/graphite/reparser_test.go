@@ -24,7 +24,9 @@ var (
 			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>\\w+?Receiver)-(?P<peer>[\\w-]+?)\\.(?P<metric2>.+$) => ${metric1}.peer.${metric2}",
 			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>\\w+?Adapter)-(?P<type>[\\w]+?)\\.(?P<metric2>.+$) => ${metric1}.${metric2}",
 			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?deliveryMonitorDurationCounter)\\.(?P<type>\\w+$) => ${metric1}",
+			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?deliveryDurationMonitorCounter)\\.(?P<type>\\w+$) => ${metric1}",
 			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?commandStatusMonitorAvgThroughputCounter)\\.(?P<status>.+$) => ${metric1}",
+			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?receivedConnectorOutMessageDlvEventMonitorAvgThroughputCounter)\\.(?P<status>.+$) => ${metric1}",
 			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?payloadOutPacketQueue)\\.(?P<peer>[\\w]+?)\\.(?P<metric2>.+$) => ${metric1}.peer.${metric2}",
 			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?channelInMessageProcessMonitorAvgThroughputCounter)\\.(?P<subject>.+$) => ${metric1}",
 			"(?:^MfmsMonitor)\\.(?P<component>\\w+?-\\w+?-(?P<name>\\w+?\\d+))\\.(?P<zone>\\w+?)\\.(?P<metric1>.+?PercentileCounter)\\.(?P<percentile>\\w+$) => ${metric1}",
@@ -348,6 +350,16 @@ func TestTemplateApplyReParser(t *testing.T) {
 				input:       "MfmsMonitor.channel-smpp-amdtelecom2.zchl07.ResendProcessor.commandStatusMonitorAvgThroughputCounter.error",
 				measurement: "ResendProcessor.commandStatusMonitorAvgThroughputCounter",
 				tags:        map[string]string{"component": "channel-smpp-amdtelecom2", "zone": "zchl07", "name": "amdtelecom2", "status": "error"},
+			},
+			{
+				input:       "MfmsMonitor.connector-hpx-bancorp0.zcnr04.McoiConnectorOutMessageDlvEventReceiver.receivedConnectorOutMessageDlvEventMonitorAvgThroughputCounter.delivered",
+				measurement: "McoiConnectorOutMessageDlvEventReceiver.receivedConnectorOutMessageDlvEventMonitorAvgThroughputCounter",
+				tags:        map[string]string{"component": "connector-hpx-bancorp0", "zone": "zcnr04", "name": "bancorp0", "status": "delivered"},
+			},
+			{
+				input:       "MfmsMonitor.channel-smpp-yandexmts0.zchl01.SubmitProcessor.deliveryDurationMonitorCounter.60",
+				measurement: "SubmitProcessor.deliveryDurationMonitorCounter",
+				tags:        map[string]string{"component": "channel-smpp-yandexmts0", "zone": "zchl01", "name": "yandexmts0", "type": "60"},
 			},
 		},
 		"push": {
