@@ -55,6 +55,9 @@ var (
 			"(?P<hostname>^push\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>[\\w-]+$) => ${metric1}",
 		},
 		"advisa": {
+			"(?P<hostname>^avi\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>StoredQueue\\.Transmitter\\..+?)\\.(?P<peer>[\\w\\d-]+?)\\.(?P<type>.+$) => ${metric1}",
+			"(?P<hostname>^avi\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>Transmitter\\..+?)\\.(?P<peer>[\\w\\d-]+?)\\.(?P<metric2>.+?)\\.(?P<type>.+$) => ${metric1}.${metric2}",
+			"(?P<hostname>^avi\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>Transmitter\\..+?)\\.(?P<peer>[\\w\\d-]+?)\\.(?P<metric2>.+(Size|Speed|uptime)$) => ${metric1}.${metric2}",
 			"(?P<hostname>^avi\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>uptime$) => ${metric1}",
 			"(?P<hostname>^avi\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.+(Size|Speed|uptime)$) => ${metric1}",
 			"(?P<hostname>^avi\\w+?)\\.(?P<component>[\\w-]+?\\d+)\\.(?P<metric1>.+)\\.(?P<type>.+$) => ${metric1}",
@@ -619,6 +622,51 @@ func TestTemplateApplyReParser(t *testing.T) {
 				input:       "avitst00.server-web_advisa-test_00.uptime",
 				measurement: "uptime",
 				tags:        map[string]string{"component": "server-web_advisa-test_00", "hostname": "avitst00"},
+			},
+			{
+				input:       "avisrv00.connector-operations_smsparse-prod_00.Transmitter.CoasCardTransaction.server-web_advisa-prod_01.enqueueTimer.p95",
+				measurement: "Transmitter.CoasCardTransaction.enqueueTimer",
+				tags:        map[string]string{"component": "connector-operations_smsparse-prod_00", "hostname": "avisrv00", "peer": "server-web_advisa-prod_01", "type": "p95"},
+			},
+			{
+				input:       "avisrv01.server-web_advisa-prod_01.Transmitter.CoasSecurityTokenUpdate.connector-advisa-prod_00.errorCount.count",
+				measurement: "Transmitter.CoasSecurityTokenUpdate.errorCount",
+				tags:        map[string]string{"component": "server-web_advisa-prod_01", "hostname": "avisrv01", "peer": "connector-advisa-prod_00", "type": "count"},
+			},
+			{
+				input:       "avisrv00.connector-operations_smsparse-prod_00.Transmitter.AdariAdvisaOutMessageDlvEvent.avirouter1.processTimer.p95",
+				measurement: "Transmitter.AdariAdvisaOutMessageDlvEvent.processTimer",
+				tags:        map[string]string{"component": "connector-operations_smsparse-prod_00", "hostname": "avisrv00", "peer": "avirouter1", "type": "p95"},
+			},
+			{
+				input:       "avisrv00.connector-registration-prod_00.Transmitter.CoasAdvisaRegistrationConfirmationResponse.server-web_advisa-prod_00.enqueueTimer.p999",
+				measurement: "Transmitter.CoasAdvisaRegistrationConfirmationResponse.enqueueTimer",
+				tags:        map[string]string{"component": "connector-registration-prod_00", "hostname": "avisrv00", "peer": "server-web_advisa-prod_00", "type": "p999"},
+			},
+			{
+				input:       "avisrv01.connector-operations_smsparse-prod_01.StoredQueue.Transmitter.AdariAdvisaOutMessageDlvEvent.avirouter0.size",
+				measurement: "StoredQueue.Transmitter.AdariAdvisaOutMessageDlvEvent",
+				tags:        map[string]string{"component": "connector-operations_smsparse-prod_01", "hostname": "avisrv01", "peer": "avirouter0", "type": "size"},
+			},
+			{
+				input:       "avisrv00.connector-operations_smsparse-prod_00.Transmitter.AdariAdvisaOutMessageDlvEvent.avirouter0.queueSize",
+				measurement: "Transmitter.AdariAdvisaOutMessageDlvEvent.queueSize",
+				tags:        map[string]string{"component": "connector-operations_smsparse-prod_00", "hostname": "avisrv00", "peer": "avirouter0"},
+			},
+			{
+				input:       "avitst00.server-web_advisa-test_01.StoredQueue.operationReceivedProcessorNGRetry.size",
+				measurement: "StoredQueue.operationReceivedProcessorNGRetry",
+				tags:        map[string]string{"component": "server-web_advisa-test_01", "hostname": "avitst00", "type": "size"},
+			},
+			{
+				input:       "avitst00.connector-registration-test_00.Transmitter.CoasAdvisaRegistrationConfirmationResponse.server-web_advisa-test_00.queueSize",
+				measurement: "Transmitter.CoasAdvisaRegistrationConfirmationResponse.queueSize",
+				tags:        map[string]string{"component": "connector-registration-test_00", "hostname": "avitst00", "peer": "server-web_advisa-test_00"},
+			},
+			{
+				input:       "avisrv00.connector-registration-rbr_00.StoredQueue.Transmitter.CoasAdvisaRegistrationConfirmationResponse.server-web_advisa-prod_01.size",
+				measurement: "StoredQueue.Transmitter.CoasAdvisaRegistrationConfirmationResponse",
+				tags:        map[string]string{"component": "connector-registration-rbr_00", "hostname": "avisrv00", "peer": "server-web_advisa-prod_01", "type": "size"},
 			},
 		},
 	}
