@@ -76,6 +76,8 @@ type Statsd struct {
 	// see https://github.com/influxdata/telegraf/pull/992
 	UDPPacketSize int `toml:"udp_packet_size"`
 
+	ReadBufferSize int `toml:"read_buffer_size"`
+
 	sync.Mutex
 	// Lock for preventing a data race during resource cleanup
 	cleanup sync.Mutex
@@ -414,6 +416,10 @@ func (s *Statsd) udpListen() error {
 	}
 	log.Println("I! Statsd UDP listener listening on: ", s.UDPlistener.LocalAddr().String())
 
+	if s.ReadBufferSize > 0 {
+		s.UDPlistener.SetReadBuffer(s.ReadBufferSize)
+	}
+
 	buf := make([]byte, UDP_MAX_PACKET_SIZE)
 	for {
 		select {
@@ -592,6 +598,10 @@ func (s *Statsd) parseStatsdLine(line string) error {
 
 		// Parse the name & tags from bucket
 		m.name, m.field, m.tags = s.parseName(m.bucket)
+		if m.name == "" {
+			log.Printf("E! Error: parsing metric name: %s\n", m.bucket)
+			return errors.New("Error Parsing statsd line")
+		}
 		switch m.mtype {
 		case "c":
 			m.tags["metric_type"] = "counter"
