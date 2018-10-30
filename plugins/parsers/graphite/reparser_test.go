@@ -40,7 +40,8 @@ var (
 		},
 		"push": {
 			"(?P<hostname>^push\\w+)\\.(?P<component>\\w+-\\w+-(?P<name>\\w+))\\.(?P<midname>[\\w.-]+(enqueuedToDelivered|enqueuedToSent|Time|Timer|Timer\\.\\w+))\\.(?P<type>[\\w-]+$) => timer",
-			"(?P<hostname>^push\\w+)\\.(?P<component>\\w+-\\w+-(?P<name>\\w+))\\.(?P<midname>[\\w.-]+(Counter\\.[\\w.-]+|Count|Meter|meter|enqueued|Available|statusMeter\\.\\w+))\\.(?P<type>[\\w-]+$) => counter",
+			"(?P<hostname>^push\\w+)\\.(?P<component>\\w+-\\w+-(?P<name>\\w+))\\.(?P<midname>[\\w.-]+(statusMeter|StatusCounter))\\.(?P<status>[\\w-]+)\\.(?P<type>[\\w-]+$) => counter.status",
+			"(?P<hostname>^push\\w+)\\.(?P<component>\\w+-\\w+-(?P<name>\\w+))\\.(?P<midname>[\\w.-]+(Counter\\.[\\w.-]+|Count|Meter|meter|enqueued|Available))\\.(?P<type>[\\w-]+$) => counter",
 			"(?P<hostname>^push\\w+)\\.(?P<component>\\w+-\\w+-(?P<name>\\w+))\\.(?P<midname>[\\w.-]+Pool)\\.(?P<type>[\\w-]+Count$) => pool",
 			"(?P<hostname>^push\\w+)\\.(?P<component>\\w+-\\w+-(?P<name>\\w+))\\.(?P<midname>[\\w.-]+Pool\\.[\\w.-]+Count)\\.(?P<type>[\\w-]+$) => pool.counter",
 			"(?P<hostname>^push\\w+)\\.(?P<component>\\w+-\\w+-(?P<name>\\w+))\\.(?P<midname>StoredQueue\\.Transmitter\\.[\\w.-]+)\\.(?P<type>[\\w-]+$) => storedqueue.transmitter",
@@ -454,8 +455,8 @@ func TestTemplateApplyReParser(t *testing.T) {
 			},
 			{
 				input:       "pushsrv08.connector-gate-sb_06.ClientOutMessageDlvStatusCounter.delivered.m1",
-				measurement: "counter",
-				tags:        map[string]string{"hostname": "pushsrv08", "component": "connector-gate-sb_06", "name": "sb_06", "type": "m1", "midname": "ClientOutMessageDlvStatusCounter.delivered"},
+				measurement: "counter.status",
+				tags:        map[string]string{"hostname": "pushsrv08", "component": "connector-gate-sb_06", "name": "sb_06", "type": "m1", "midname": "ClientOutMessageDlvStatusCounter", "status": "delivered"},
 			},
 			{
 				input:       "pushsrv07.channel-push_gcmxmpp-prod_07.pools.Metaspace.max",
@@ -499,8 +500,8 @@ func TestTemplateApplyReParser(t *testing.T) {
 			},
 			{
 				input:       "pushdemo00.connector-http-brooma_demo_06.ConnectorOutMessageDlvStatusCounter.rejected.m1",
-				measurement: "counter",
-				tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-http-brooma_demo_06", "name": "brooma_demo_06", "type": "m1", "midname": "ConnectorOutMessageDlvStatusCounter.rejected"},
+				measurement: "counter.status",
+				tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-http-brooma_demo_06", "name": "brooma_demo_06", "type": "m1", "midname": "ConnectorOutMessageDlvStatusCounter", "status": "rejected"},
 			},
 			{
 				input:       "pushdemo00.channel-push_apnshttp-demo_00.StoredQueue.Transmitter.CmiPushMessageDlvEvent.connector-http-tcsbankdemo_00.size",
@@ -664,8 +665,8 @@ func TestTemplateApplyReParser(t *testing.T) {
 			},
 			{
 				input:       "pushsrv07.connector-gate-sb_01.TrafficMonitoringService.statusMeter.push_upstream_delivered.count",
-				measurement: "counter",
-				tags:        map[string]string{"hostname": "pushsrv07", "component": "connector-gate-sb_01", "name": "sb_01", "type": "count", "midname": "TrafficMonitoringService.statusMeter.push_upstream_delivered"},
+				measurement: "counter.status",
+				tags:        map[string]string{"hostname": "pushsrv07", "component": "connector-gate-sb_01", "name": "sb_01", "type": "count", "midname": "TrafficMonitoringService.statusMeter", "status": "push_upstream_delivered"},
 			},
 			{
 				input:       "pushdemo00.channel-push_websocket-demo_00.WebSocketChannelSender.web_threads_chat_minbank_680.notificationsPushedWithError",
@@ -691,6 +692,16 @@ func TestTemplateApplyReParser(t *testing.T) {
 				input:       "pushdemo00.connector-db-test_demo.CassandraStorageWsPostponeMessageDataAccessor.successCount.m1",
 				measurement: "counter",
 				tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-db-test_demo", "name": "test_demo", "type": "m1", "midname": "CassandraStorageWsPostponeMessageDataAccessor.successCount"},
+			},
+			{
+				input:       "pushdemo00.connector-http-tcsbankdemo_01.ClientOutMessageDlvStatusCounter.failed.count",
+				measurement: "counter.status",
+				tags:        map[string]string{"hostname": "pushdemo00", "component": "connector-http-tcsbankdemo_01", "name": "tcsbankdemo_01", "type": "count", "midname": "ClientOutMessageDlvStatusCounter", "status": "failed"},
+			},
+			{
+				input:       "pushsrv02.connector-gate-psbank_01.TrafficMonitoringService.statusMeter.push_upstream_delivered.m1",
+				measurement: "counter.status",
+				tags:        map[string]string{"hostname": "pushsrv02", "component": "connector-gate-psbank_01", "name": "psbank_01", "type": "m1", "midname": "TrafficMonitoringService.statusMeter", "status": "push_upstream_delivered"},
 			},
 		},
 		"advisa": {
@@ -853,6 +864,11 @@ func TestTemplateApplyReParser(t *testing.T) {
 				input:       "avisrv01.connector-terminal-prod_00.TerminalSimilarIndexService.successRate",
 				measurement: "index",
 				tags:        map[string]string{"component": "connector-terminal-prod_00", "hostname": "avisrv01", "type": "successRate", "midname": "TerminalSimilarIndexService"},
+			},
+			{
+				input:       "avisrv01.server-web_admin-test_00.UploadTerminalsService.avgOverallSpeedMeter.count",
+				measurement: "counter",
+				tags:        map[string]string{"component": "server-web_admin-test_00", "hostname": "avisrv01", "type": "count", "midname": "UploadTerminalsService.avgOverallSpeedMeter"},
 			},
 		},
 	}
